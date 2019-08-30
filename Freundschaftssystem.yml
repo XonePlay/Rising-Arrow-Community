@@ -1,5 +1,0 @@
-Freundschaftssystem:
-    type: world
-    events:
-        on player flag changed:
-            - narrate „Hello world!“
