@@ -1,0 +1,95 @@
+sql_test:
+    type: task
+    script:
+        - ~sql id:ads connect:km221232-001.dbaas.ovh.net:35353/ads?characterEncoding=latin1 username:minecraft password:SSs65QBfcQy3xrgu 
+        - ~sql id:ads "query:SELECT id FROM bossbar WHERE id=1;" save:id
+        - ~sql id:ads "query:SELECT title FROM bossbar WHERE id=1;" save:title
+        - ~sql id:ads "query:SELECT text FROM bossbar WHERE id=1;" save:text
+        - ~sql id:ads "query:SELECT author FROM bossbar WHERE id=1;" save:author
+        
+        
+        - define id <entry[id].result>
+        - define title <entry[title].result>
+        - define text <entry[text].result>
+        - define author <entry[author].result>
+        
+        
+        - narrate "<&a>Ad-ID: <&f><def[id].get[1].replace_text[/].with[]>"
+        - narrate "<&6>Title: <&f><def[title].get[1].replace_text[/].with[]>"
+        - narrate "<&e>Text: <&f><def[text].get[1].replace_text[/].with[].replace_text[&dot].with[.].replace_text[&exc].with[!]>"
+        - narrate "<&a>Author: <&f><def[author].get[1].replace_text[/].with[]>"
+        
+        - adjust <player> "show_boss_bar:100|<&a>Ad-ID: <&f><def[id].get[1].replace_text[/].with[]> <&pipe> <&6>Title: <&f><def[title].get[1].replace_text[/].with[]> <&pipe> <&e>Text: <&f><def[text].get[1].replace_text[/].with[].replace_text[&dot].with[.].replace_text[&exc].with[!]> <&pipe> <&a>Author: <&f><def[author].get[1].replace_text[/].with[]>"
+        
+        
+        - sql disconnect id:ads 
+        
+        
+Jacko_1:
+    type: item
+    debug: false
+    material: written_book[book=author|Blackwinter|title|Geile Dinge|raw_pages|
+    {"text":"<s@Jacko.constant[name]>:\n\n","color":"dark_blue","bold":"true","extra":[{"text":"<s@Jacko.constant[dialog_1]>\n\n","color":"black","bold":"false"}]}|{"text":"<s@Jacko.constant[name]>:\n\n","color":"dark_blue","bold":"true","extra":[{"text":"<s@Jacko.constant[dialog_2]>\n\n","color":"black","bold":"false"},{"text":"<s@Jacko.constant[answer_1]>\n\n","color":"dark_green","bold":"false","hoverEvent":{"action":"show_text","value":"<s@Jacko.constant[answer_1_hover]>","color":"gold"}},{"text":"<s@Jacko.constant[answer_2]>\n\n","color":"dark_green","bold":"false","hoverEvent":{"action":"show_text","value":"<s@Jacko.constant[answer_2_hover]>"}}]}]
+    
+
+testproc1:
+    type: procedure
+    debug: false
+    script:
+        - ^define lala 2
+        - define lala <def[lala].mul_int[<util.random.int[1].to[10]>]>
+        - determine <def[lala]>
+        
+testbuch:
+    type: book
+    title: lala
+    signed: true
+    
+    text:
+    - '<proc[testproc1]>'
+    - '<proc[msgHover].context[<&e>secret|<&6>gold star!]>'
+
+fake_book:
+    type: task
+    
+    script: 
+
+        
+        - define alle:p@XonePlay
+        - define alle2:<def[alle].has_flag[moin]>
+        - narrate "<def[alle2]>"
+    
+    
+    
+Jacko:
+    type: assignment
+    debug: false
+    interact scripts:
+        - 1 Int_Jacko
+    actions:
+        on assignment:
+        - trigger name:click state:true radius:3
+        - trigger name:proximity state:true radius:5
+    default constants:
+        name: Jacko
+        dialog_1: "Ahoy du Landratte! Ich komm' gerade von einer langen Kutterfahrt wieder. Hab' einiges erlebt und mein  Kutter ist bis unter die Kiemen voll mit dem besten Fisch. Egal welchen du suchst, ich hab sie alle, nech? "
+        dialog_2: "Was meinst? Kommen wir ins Geschäft?"
+        answer_1: "- Ich bin einverstanden."
+        answer_1_hover: "Handel akzeptieren"
+        answer_2: "- Das stinkt mir gewaltig!"
+        answer_2_hover: "Handel ablehnen"
+        
+        
+Int_Jacko:
+    type: interact
+    debug: false
+    Steps:
+        1:
+            Click Trigger:
+                Script:
+                - adjust <player> show_book:Jacko_1
+
+    
+    
+
+    

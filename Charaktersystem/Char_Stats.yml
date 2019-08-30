@@ -1,0 +1,586 @@
+bossbar_proc:
+    type: procedure
+    debug: false
+    script:
+        - define hp <player.health>
+        - define hp <def[hp].div[<player.health.max>]>
+        - determine %hp%
+
+
+
+Player_Bossbar:
+    type: world
+    debug: false
+    events:
+        on player joins:
+        - wait 1s
+        - if <server.current_bossbars.contains[<player>].not> {
+            - bossbar create <player> players:<player> "title:<&2><&l>✦ <&c><&l>HP <player.health.as_int>/<player.health.max.as_int> <&8><&l>| <&3><&l>EXP <player.flag[exp].as_int>/<proc[Level_proc].as_int> <&8><&l>| <&6><&l>Lv.<player.flag[char_level].as_int> <&2><&l>✦" progress:<proc[bossbar_proc]> color:RED
+        }
+        else
+        {
+           - bossbar update <player> players:<player> "title:<&2><&l>✦ <&c><&l>HP <player.health.as_int>/<player.health.max.as_int> <&8><&l>| <&3><&l>EXP <player.flag[exp].as_int>/<proc[Level_proc].as_int> <&8><&l>| <&6><&l>Lv.<player.flag[char_level].as_int> <&2><&l>✦" progress:<proc[bossbar_proc]> color:RED
+        }
+        
+        on player respawns:
+        - bossbar update <player> players:<player> "title:<&2><&l>✦ <&c><&l>HP <player.health.as_int>/<player.health.max.as_int> <&8><&l>| <&3><&l>EXP <player.flag[exp].as_int>/<proc[Level_proc].as_int> <&8><&l>| <&6><&l>Lv.<player.flag[char_level].as_int> <&2><&l>✦" progress:<proc[bossbar_proc]> color:RED
+
+        on player damaged:
+        - bossbar update <player> players:<player> "title:<&2><&l>✦ <&c><&l>HP <player.health.as_int>/<player.health.max.as_int> <&8><&l>| <&3><&l>EXP <player.flag[exp].as_int>/<proc[Level_proc].as_int> <&8><&l>| <&6><&l>Lv.<player.flag[char_level].as_int> <&2><&l>✦" progress:<proc[bossbar_proc]> color:RED
+        
+        on player heals:
+        - bossbar update <player> players:<player> "title:<&2><&l>✦ <&c><&l>HP <player.health.as_int>/<player.health.max.as_int> <&8><&l>| <&3><&l>EXP <player.flag[exp].as_int>/<proc[Level_proc].as_int> <&8><&l>| <&6><&l>Lv.<player.flag[char_level].as_int> <&2><&l>✦" progress:<proc[bossbar_proc]> color:RED
+        
+        on player flag exp changed:
+        - bossbar update <player> players:<player> "title:<&2><&l>✦ <&c><&l>HP <player.health.as_int>/<player.health.max.as_int> <&8><&l>| <&3><&l>EXP <player.flag[exp].as_int>/<proc[Level_proc].as_int> <&8><&l>| <&6><&l>Lv.<player.flag[char_level].as_int> <&2><&l>✦" progress:<proc[bossbar_proc]> color:RED
+
+        on player flag char_level changed:
+        - bossbar update <player> players:<player> "title:<&2><&l>✦ <&c><&l>HP <player.health.as_int>/<player.health.max.as_int> <&8><&l>| <&3><&l>EXP <player.flag[exp].as_int>/<proc[Level_proc].as_int> <&8><&l>| <&6><&l>Lv.<player.flag[char_level].as_int> <&2><&l>✦" progress:<proc[bossbar_proc]> color:RED
+
+
+
+
+
+ 
+Ausdauer_Stat:
+    type: world
+    debug: false
+    events:
+        on player flag aus changed:
+        - yaml set id:p_stats <player>.aus:<player.flag[aus]>
+        - event "player flag change aus"
+        
+        on player flag w_aus changed:
+        - event "player flag change aus"
+        
+        on player flag change aus:
+        - define health 0
+        - ^define health <def[health].add[<player.inventory.slot[1].lore.get[<player.inventory.slot[1].lore.find_partial[AUS]>].after[+].before[)]||0>]>
+        - ^define health <def[health].add[<player.inventory.slot[37].lore.get[<player.inventory.slot[37].lore.find_partial[AUS]>].after[+].before[)]||0>]>
+        - ^define health <def[health].add[<player.inventory.slot[38].lore.get[<player.inventory.slot[38].lore.find_partial[AUS]>].after[+].before[)]||0>]>
+        - ^define health <def[health].add[<player.inventory.slot[39].lore.get[<player.inventory.slot[39].lore.find_partial[AUS]>].after[+].before[)]||0>]>
+        - ^define health <def[health].add[<player.inventory.slot[40].lore.get[<player.inventory.slot[40].lore.find_partial[AUS]>].after[+].before[)]||0>]>
+        - ^define health <def[health].add[<player.flag[aus].mul[1]>]||0>
+        - ^define health <def[health].add[20]>
+        - ^adjust <player> max_health:<def[health]>
+        - bossbar update <player> players:<player> "title:<&2><&l>✦ <&c><&l>HP <player.health.as_int>/<player.health.max.as_int> <&8><&l>| <&3><&l>EXP <player.flag[exp].as_int>/<proc[Level_proc].as_int> <&8><&l>| <&6><&l>Lv.<player.flag[char_level].as_int> <&2><&l>✦" progress:<proc[bossbar_proc]> color:RED
+        
+        on player flag str changed:
+        - yaml set id:p_stats <player>.str:<player.flag[str]>
+        
+        on player flag ges changed:
+        - yaml set id:p_stats <player>.ges:<player.flag[ges]>
+        
+        
+        on player joins:
+        - if <yaml[p_stats].read[<player>.str]||none> == none {
+            - flag player str:0
+            - yaml set id:p_stats <player>.str:0
+        }
+        else if <yaml[p_stats].read[<player>.str]||> >= 0 {
+            - flag player str:<yaml[p_stats].read[<player>.str]||>
+        }
+
+        - if <yaml[p_stats].read[<player>.aus]||none> == none {
+            - flag player aus:0
+            - yaml set id:p_stats <player>.aus:0
+        }
+        else if <yaml[p_stats].read[<player>.aus]||> >= 0 {
+            - flag player aus:<yaml[p_stats].read[<player>.aus]||>
+        }
+        
+        - if <yaml[p_stats].read[<player>.ges]||none> == none {
+            - flag player ges:0
+            - yaml set id:p_stats <player>.ges:0
+        }
+        else if <yaml[p_stats].read[<player>.ges]||> >= 0 {
+            - flag player ges:<yaml[p_stats].read[<player>.ges]||>
+        }
+        
+        
+        
+        
+
+        
+        
+        on shutdown:
+        - yaml savefile:data_saves/p_stats.yml id:p_stats
+        on system time minutely:
+        - yaml savefile:data_saves/p_stats.yml id:p_stats
+   
+
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+Stat_Inventory:
+    type: inventory
+    debug: false
+    title: Statuswerte
+    size: 9
+    definitions:
+        str: i@STR_Item
+        ges: i@GES_Item
+        aus: i@AUS_Item
+        a: i@filler_item_Stat_Inventory
+        
+    slots: 
+    - "[str] [ges] [aus] [a] [a] [a] [a] [a] [a]" 
+    
+    
+Stat_Inventory_handler:
+    type: world
+    debug: false
+    events:
+        on stats command:
+        - inventory open d:in@Stat_Inventory
+        on player clicks in Stat_Inventory:
+        - determine cancelled
+        on player drags in Stat_Inventory:
+        - determine cancelled
+        on player left clicks STR_Item in Stat_Inventory:
+        - if <player.flag[statuspunkte]> > 0 {
+            - flag player statuspunkte:-:1
+            - flag player str:+:1
+            - inventory open d:in@Stat_Inventory
+        }
+        else
+        {
+            - actionbar "<&6><&l>[<&4><&l><&n>Du hast keine Statpunkte mehr!<&6><&l>]"
+        }
+        
+        on player left clicks GES_Item in Stat_Inventory:
+        - if <player.flag[statuspunkte]> > 0 {
+            - flag player statuspunkte:-:1
+            - flag player ges:+:1
+            - inventory open d:in@Stat_Inventory
+        }
+        else
+        {
+            - actionbar "<&6><&l>[<&4><&l><&n>Du hast keine Statpunkte mehr!<&6><&l>]"
+        }
+        
+        on player left clicks AUS_Item in Stat_Inventory:
+        - if <player.flag[statuspunkte]> > 0 {
+            - flag player statuspunkte:-:1
+            - flag player aus:+:1
+            - inventory open d:in@Stat_Inventory
+        }
+        else
+        {
+            - actionbar "<&6><&l>[<&4><&l><&n>Du hast keine Statpunkte mehr!<&6><&l>]"
+        }
+        on player right clicks in Stat_Inventory:
+        - inventory open d:in@Char_menu
+        - determine cancelled
+        
+        
+        on player clicks filler_item_Stat_Inventory in Stat_Inventory:
+        - determine cancelled
+        
+    
+filler_item_Stat_Inventory:
+    type: item
+    debug: false
+    material: black_stained_glass_pane
+    display name: <&8>...
+    
+    
+    
+    
+STR_Item:
+    type: item 
+    debug: false
+    material: i@gray_dye
+    display name: <&c><&l><&n>Stärke
+    lore:
+    - "<&e>Pro Punkt wird der Schaden"
+    - "<&e>um 0.8 Punkte erhöht."
+    - ""
+    - "<&9>Aktuell: <proc[STR_proc].as_int>"
+    - ""
+    - "<&f>Du hast noch <&a><player.flag[statuspunkte].as_int||0> <&f>Statuspunkte!"
+    - ""
+    - "<&7>Linksklick auf den Statuswert"
+    - "<&7>um einen Punkt zu vergeben."
+    - ""
+    - "<&c><&n>Achtung! Änderungen können nicht"
+    - "<&c><&n>wieder rückgängig gemacht werden!"
+
+STR_proc:
+    type: procedure
+    debug: false
+    script:
+        - define str 0
+        - define str <def[str].add[<player.flag[str]>]||0>
+        - define str <def[str].add[<player.item_in_hand.lore.get[<player.item_in_hand.lore.find_partial[STR]>].after[+].before[)]||0>]||0>
+        - determine %str%
+        
+ 
+
+GES_Item:
+    type: item 
+    debug: false
+    material: i@lime_dye
+    display name: <&a><&l><&n>Geschicklichkeit
+    lore:
+    - "<&e>Pro Punkt erhöht sich"
+    - "<&e>die Zeilgenauigkeit um 0.2%."
+    - ""
+    - "<&9>Aktuell: <proc[GES_proc].as_int>"
+    - ""
+    - "<&f>Du hast noch <&a><player.flag[statuspunkte].as_int||0> <&f>Statuspunkte!"
+    - ""
+    - "<&7>Linksklick auf den Statuswert"
+    - "<&7>um einen Punkt zu vergeben."
+    - ""
+    - "<&c><&n>Achtung! Änderungen können nicht"
+    - "<&c><&n>wieder rückgängig gemacht werden!" 
+    
+ 
+GES_proc:
+    type: procedure
+    debug: false
+    script:
+        - define ges <player.flag[ges]||0>
+        - define ges "<def[ges].add[<player.item_in_hand.lore.get[<player.item_in_hand.lore.find_partial[GES]>].after[+].before[)]||0>]||0>"
+        - define ges "<def[ges].add[<player.inventory.slot[37].lore.get[<player.inventory.slot[37].lore.find_partial[GES]>].after[+].before[)]||0>]||0>"
+        - define ges "<def[ges].add[<player.inventory.slot[38].lore.get[<player.inventory.slot[38].lore.find_partial[GES]>].after[+].before[)]||0>]||0>"
+        - define ges "<def[ges].add[<player.inventory.slot[39].lore.get[<player.inventory.slot[39].lore.find_partial[GES]>].after[+].before[)]||0>]||0>"
+        - define ges "<def[ges].add[<player.inventory.slot[40].lore.get[<player.inventory.slot[40].lore.find_partial[GES]>].after[+].before[)]||0>]||0>"
+        - determine %ges%
+
+
+ 
+AUS_Item:
+    type: item 
+    debug: false
+    material: i@orange_dye
+    display name: <&6><&l><&n>Ausdauer
+    lore:
+    - "<&e>Pro Punkt erhöht sich"
+    - "<&e>die maximale HP um 1."
+    - ""
+    - "<&9>Aktuell: <proc[AUS_proc].as_int>"
+    - ""
+    - "<&f>Du hast noch <&a><player.flag[statuspunkte].as_int||0> <&f>Statuspunkte!"
+    - ""
+    - "<&7>Linksklick auf den Statuswert"
+    - "<&7>um einen Punkt zu vergeben."
+    - ""
+    - "<&c><&n>Achtung! Änderungen können nicht"
+    - "<&c><&n>wieder rückgängig gemacht werden!"
+    
+AUS_proc:
+    type: procedure
+    debug: false
+    script:
+        - define player <player>
+        - define aus <%player%.flag[aus]||0>
+        - define aus <def[aus].add[<player.item_in_hand.lore.get[<player.item_in_hand.lore.find_partial[AUS]>].after[+].before[)]||0>]>"
+        - define aus <def[aus].add[<player.inventory.slot[37].lore.get[<player.inventory.slot[37].lore.find_partial[AUS]>].after[+].before[)]||0>]>"
+        - define aus <def[aus].add[<player.inventory.slot[38].lore.get[<player.inventory.slot[38].lore.find_partial[AUS]>].after[+].before[)]||0>]>"
+        - define aus <def[aus].add[<player.inventory.slot[39].lore.get[<player.inventory.slot[39].lore.find_partial[AUS]>].after[+].before[)]||0>]>"
+        - define aus <def[aus].add[<player.inventory.slot[40].lore.get[<player.inventory.slot[40].lore.find_partial[AUS]>].after[+].before[)]||0>]>"
+        - determine %aus%
+
+
+ 
+        
+AUS_handler:
+    type: world
+    debug: false
+    events:        
+        on player drags in inventory:
+        - wait 1t
+        - event "player flag change aus"
+        on player clicks in inventory:
+        - wait 1t
+        - event "player flag change aus"
+        on player picks up item:
+        - wait 1t
+        - event "player flag change aus"
+        on player drops item:
+        - event "player flag change aus"
+        on player right clicks with item:
+        - wait 1t
+        - event "player flag change aus"
+        
+   
+        
+Inventory_handler:
+    type: world
+    debug: false
+    events:
+        on item in slot changes in <inventory>:
+        - if <context.new_item> != i@wool determine cancelled
+        
+
+
+Money_System:
+    type: world
+    debug: false
+    events:
+        on player joins:
+		- if <player.has_flag[statuspunkte].not> {
+			- flag player statuspunkte:0
+		}
+        
+        
+        - if <yaml[p_stats].read[<player>.money]||none> == none {
+            - flag player money:0
+            - yaml set id:p_stats <player>.money:0
+        }
+        else if <yaml[p_stats].read[<player>.money]||> >= 0 {
+            - flag player money:<yaml[p_stats].read[<player>.money]||>
+        }
+
+        
+        on geld command:
+        - determine fulfilled passively
+        - narrate "<&6>Gold: <&e><player.flag[money]>"
+        
+        on player flag money changed:
+            - yaml id:p_stats set <player>.money:<player.flag[money]>
+            
+
+
+        
+
+        
+
+        
+Dextory_rechner:
+    type: procedure
+    debug: false
+    script:
+        - define ges 10
+        - define ges <def[ges].mul[0.2].add[70]>
+        - if <util.random.int[0.1].to[100]> <= <def[ges]> {
+            - determine cancelled 
+        } else {
+        
+        
+        }
+        
+    
+damage_entity_handler:
+    type: world
+    debug: false
+    events:
+        on player shoots bow:
+        - if <player.has_flag[wp_cooldown]> determine cancelled
+        - if "<player.item_in_hand.lore.find_partial[Min Level]||-1>" != -1 && "<player.item_in_hand.lore.get[<player.item_in_hand.lore.find_partial[Min Level]>].after[<&co><&sp>]||1000>" > <player.flag[char_level]||0> {
+                - actionbar "<&6><&l>[<&4><&l><&n>Du musst mehr trainieren. <&c><&l>(Benötigtes Lv.<player.item_in_hand.lore.get[<player.item_in_hand.lore.find_partial[Min Level]||>].after[<&co><&sp>]||x>)<&6><&l>]"
+                - determine cancelled
+            }
+        
+        on player damages entity:
+        - if <player.item_in_hand.simple> == i@wood_sword || <player.item_in_hand.simple> == i@stone_sword || <player.item_in_hand.simple> == i@gold_sword || <player.item_in_hand.simple> == i@diamond_sword || <player.item_in_hand.simple> == i@iron_sword || <player.item_in_hand.simple> == i@wood_axe || <player.item_in_hand.simple> == i@stone_axe || <player.item_in_hand.simple> == i@iron_axe || <player.item_in_hand.simple> == i@gold_axe || <player.item_in_hand.simple> == i@diamond_axe || <player.item_in_hand.simple> == i@wood_pickaxe || <player.item_in_hand.simple> == i@stone_pickaxe || <player.item_in_hand.simple> == i@iron_pichaxe || <player.item_in_hand.simple> == i@gold_pickaxe || <player.item_in_hand.simple> == i@diamond_pickaxe {
+            - queue clear
+        }
+        
+        - if <player.has_flag[wp_cooldown]> determine cancelled
+        
+        - define damage 0
+        
+        - if "<player.item_in_hand.lore.find_partial[Min Level]||-1>" != -1 {
+            - if "<player.item_in_hand.lore.get[<player.item_in_hand.lore.find_partial[Min Level]>].after[<&co><&sp>]||1000>" !> <player.flag[char_level]||0> {
+        
+                - flag player wp_cooldown duration:<player.item_in_hand.lore.get[<player.item_in_hand.lore.find_partial[Angriffsrate]>].after[<&co><&sp>]||2.0s>
+                - run cooldown_entity_hit player:<player>
+            
+           
+            
+
+                - define damage "<util.random.int[<player.item_in_hand.lore.get[<player.item_in_hand.lore.find_partial[Schaden]>].after[<&co><&sp>].before[-]||0>].to[<player.item_in_hand.lore.get[<player.item_in_hand.lore.find_partial[Schaden]>].after[-]||0>]||0>"
+                - define damage <def[damage].add[<player.flag[str].mul[0.8]>]||0>
+                - if <player.item_in_hand.lore.find_partial[STR]||0> != -1 {
+                    - define damage <def[damage].add[<player.item_in_hand.lore.get[<player.item_in_hand.lore.find_partial[STR]||0>].after[+].before[)].mul[0.8]||0>]>
+                }
+                else
+                {}
+                - if <player.inventory.slot[37].lore.find_partial[STR]||0> != -1 {
+                    - define damage <def[damage].add[<player.inventory.slot[37].lore.get[<player.inventory.slot[37].lore.find_partial[STR]||0>].after[+].before[)].mul[0.8]||0>]>
+                }
+                else
+                {}
+                - if <player.inventory.slot[38].lore.find_partial[STR]||0> != -1 {
+                    - define damage <def[damage].add[<player.inventory.slot[38].lore.get[<player.inventory.slot[38].lore.find_partial[STR]||0>].after[+].before[)].mul[0.8]||0>]>
+                }
+                else
+                {}
+                - if <player.inventory.slot[39].lore.find_partial[STR]||0> != -1 {
+                    - define damage <def[damage].add[<player.inventory.slot[39].lore.get[<player.inventory.slot[39].lore.find_partial[STR]||0>].after[+].before[)].mul[0.8]||0>]>
+                }
+                else
+                {}
+                - if <player.inventory.slot[40].lore.find_partial[STR]||0> != -1 {
+                    - define damage <def[damage].add[<player.inventory.slot[40].lore.get[<player.inventory.slot[40].lore.find_partial[STR]||0>].after[+].before[)].mul[0.8]||0>]>
+                }
+                else
+                {}
+                - define zwischendamage <def[damage]>
+                - define enchant <player.item_in_hand.enchantments.level[DAMAGE_ALL]||0>
+                - define enchant <def[enchant].mul[5]||0>
+                - define enchant <def[zwischendamage].div[100].mul[<def[enchant]>]||0>
+                - define damage <def[damage].add[<def[enchant]>]>
+                
+                - if <context.entity.entity_type> == zombie || <context.entity.name> == skeleton || <context.entity.name> == pig_zombie || <context.entity.name> == wither {
+                    - define bane <player.item_in_hand.enchantments.level[DAMAGE_UNDEAD]||0>
+                    - define bane <def[bane].mul[8]||0>
+                    - define bane <def[zwischendamage].div[100].mul[<def[bane]>]||0>
+                    - define damage <def[damage].add[<def[bane]>]>
+                }
+                
+                - if <context.entity.entity_type> == spider || <context.entity.name> == cave_spider || <context.entity.name> == silverfish {
+                    - define ardmg <player.item_in_hand.enchantments.level[DAMAGE_ARTHROPODS]||0>
+                    - define ardmg <def[ardmg].mul[8]||0>
+                    - define ardmg <def[zwischendamage].div[100].mul[<def[ardmg]>]||0>
+                    - define damage <def[damage].add[<def[ardmg]>]>
+                }
+
+            
+            }
+            else
+            {
+                - flag player wp_cooldown duration:2s
+                - run cooldown_entity_hit player:<player>
+                - run Level_restrict
+            }
+            
+        }
+        else
+        {
+            - flag player wp_cooldown duration:1.5s
+            - run cooldown_entity_hit player:<player>
+            - run Level_restrict
+            - define damage <def[damage].add[<context.damage>]>
+        }
+        
+        - define ges <player.flag[ges]||0>
+        - define ges "<def[ges].add[<player.item_in_hand.lore.get[<player.item_in_hand.lore.find_partial[GES]||>].after[+].before[)]||0>]||0>"
+        - define ges "<def[ges].add[<player.inventory.slot[37].lore.get[<player.inventory.slot[37].lore.find_partial[GES]||>].after[+].before[)]||0>]||0>"
+        - define ges "<def[ges].add[<player.inventory.slot[38].lore.get[<player.inventory.slot[38].lore.find_partial[GES]||>].after[+].before[)]||0>]||0>"
+        - define ges "<def[ges].add[<player.inventory.slot[39].lore.get[<player.inventory.slot[39].lore.find_partial[GES]||>].after[+].before[)]||0>]||0>"
+        - define ges "<def[ges].add[<player.inventory.slot[40].lore.get[<player.inventory.slot[40].lore.find_partial[GES]||>].after[+].before[)]||0>]||0>"
+        - define ges <def[ges].mul[0.2].add[75]>
+        - if <util.random.decimal[0.1].to[100.0]> >= <def[ges]> {
+            - actionbar "<&6>[<&c><&l>MISS<&6>]"
+            - determine cancelled 
+        } else {
+            - actionbar "<&8>[<&7><&l>-<def[damage].as_money><&8>]"
+            - determine %damage%
+        }
+        
+
+Level_restrict:
+    type: task
+    debug: true
+    script:
+        - if "<player.item_in_hand.lore.find_partial[Min Level]||-1>" != -1 && "<player.item_in_hand.lore.get[<player.item_in_hand.lore.find_partial[Min Level]>].after[<&co><&sp>]||1000>" > <player.flag[char_level]||0> {
+                - actionbar "<&6><&l>[<&4><&l><&n>Du musst mehr trainieren. <&c><&l>(Benötigtes Lv.<player.item_in_hand.lore.get[<player.item_in_hand.lore.find_partial[Min Level]||>].after[<&co><&sp>]||x>)<&6><&l>]"
+            }
+        
+        
+        
+        
+cooldown_entity_hit:
+    type: task
+    debug: false
+    speed: 1t
+    script:
+    - if <player.has_flag[hide_cooldown]> queue clear
+    - while <player.has_flag[wp_cooldown]> {
+        - if <player.has_flag[levelup_cooldown]> queue clear
+        - title "title:" "subtitle:                                               <&6><player.flag[wp_cooldown].expiration.formatted||<&a>Bereit>" fade_in:0t stay:1s fade_out:1s
+        - wait 1t
+        - if <player.has_flag[levelup_cooldown]> queue clear
+        - title "title:" "subtitle:                                               <&6><player.flag[wp_cooldown].expiration.formatted||<&a>Bereit>" fade_in:0t stay:1s fade_out:1s
+        - wait 1t
+        - if <player.has_flag[levelup_cooldown]> queue clear
+        - title "title:" "subtitle:                                               <&6><player.flag[wp_cooldown].expiration.formatted||<&a>Bereit>" fade_in:0t stay:1s fade_out:1s
+        - wait 1t
+        - if <player.has_flag[levelup_cooldown]> queue clear
+        - title "title:" "subtitle:                                               <&6><player.flag[wp_cooldown].expiration.formatted||<&a>Bereit>" fade_in:0t stay:1s fade_out:1s
+        - wait 1t
+        - if <player.has_flag[levelup_cooldown]> queue clear
+        - title "title:" "subtitle:                                               <&6><player.flag[wp_cooldown].expiration.formatted||<&a>Bereit>" fade_in:0t stay:1s fade_out:1s
+        - wait 1t
+        - if <player.has_flag[levelup_cooldown]> queue clear
+        - title "title:" "subtitle:                                               <&6><player.flag[wp_cooldown].expiration.formatted||<&a>Bereit>" fade_in:0t stay:1s fade_out:1s
+        - wait 1t
+        - if <player.has_flag[levelup_cooldown]> queue clear
+        - title "title:" "subtitle:                                               <&6><player.flag[wp_cooldown].expiration.formatted||<&a>Bereit>" fade_in:0t stay:1s fade_out:1s
+        - wait 1t
+        - if <player.has_flag[levelup_cooldown]> queue clear
+        - title "title:" "subtitle:                                               <&6><player.flag[wp_cooldown].expiration.formatted||<&a>Bereit>" fade_in:0t stay:1s fade_out:1s
+        - wait 1t
+        - if <player.has_flag[levelup_cooldown]> queue clear
+        - title "title:" "subtitle:                                               <&6><player.flag[wp_cooldown].expiration.formatted||<&a>Bereit>" fade_in:0t stay:1s fade_out:1s
+        - wait 1t
+        - if <player.has_flag[levelup_cooldown]> queue clear
+        - title "title:" "subtitle:                                               <&6><player.flag[wp_cooldown].expiration.formatted||<&a>Bereit>" fade_in:0t stay:1s fade_out:1s
+        - wait 1t
+        - if <player.has_flag[levelup_cooldown]> queue clear
+        - title "title:" "subtitle:                                               <&6><player.flag[wp_cooldown].expiration.formatted||<&a>Bereit>" fade_in:0t stay:1s fade_out:1s
+        - wait 1t
+        - if <player.has_flag[levelup_cooldown]> queue clear
+        - title "title:" "subtitle:                                               <&6><player.flag[wp_cooldown].expiration.formatted||<&a>Bereit>" fade_in:0t stay:1s fade_out:1s
+        - wait 1t
+        - if <player.has_flag[levelup_cooldown]> queue clear
+        - title "title:" "subtitle:                                               <&6><player.flag[wp_cooldown].expiration.formatted||<&a>Bereit>" fade_in:0t stay:1s fade_out:1s
+        - wait 1t
+        - if <player.has_flag[levelup_cooldown]> queue clear
+        - title "title:" "subtitle:                                               <&6><player.flag[wp_cooldown].expiration.formatted||<&a>Bereit>" fade_in:0t stay:1s fade_out:1s
+        - wait 1t
+        - if <player.has_flag[levelup_cooldown]> queue clear
+        - title "title:" "subtitle:                                               <&6><player.flag[wp_cooldown].expiration.formatted||<&a>Bereit>" fade_in:0t stay:1s fade_out:1s
+        - wait 1t
+        - if <player.has_flag[levelup_cooldown]> queue clear
+        - title "title:" "subtitle:                                               <&6><player.flag[wp_cooldown].expiration.formatted||<&a>Bereit>" fade_in:0t stay:1s fade_out:1s
+        - wait 1t
+        - if <player.has_flag[levelup_cooldown]> queue clear
+        - title "title:" "subtitle:                                               <&6><player.flag[wp_cooldown].expiration.formatted||<&a>Bereit>" fade_in:0t stay:1s fade_out:1s
+        - wait 1t
+        - if <player.has_flag[levelup_cooldown]> queue clear
+        - title "title:" "subtitle:                                               <&6><player.flag[wp_cooldown].expiration.formatted||<&a>Bereit>" fade_in:0t stay:1s fade_out:1s
+        - wait 1t
+        - if <player.has_flag[levelup_cooldown]> queue clear
+        - title "title:" "subtitle:                                               <&6><player.flag[wp_cooldown].expiration.formatted||<&a>Bereit>" fade_in:0t stay:1s fade_out:1s
+        - wait 1t
+        - if <player.has_flag[levelup_cooldown]> queue clear
+        - title "title:" "subtitle:                                               <&6><player.flag[wp_cooldown].expiration.formatted||<&a>Bereit>" fade_in:0t stay:1s fade_out:1s
+        - wait 1t
+        - if <player.has_flag[levelup_cooldown]> queue clear
+        - title "title:" "subtitle:                                               <&6><player.flag[wp_cooldown].expiration.formatted||<&a>Bereit>" fade_in:0t stay:1s fade_out:1s
+        - wait 1t
+        - if <player.has_flag[levelup_cooldown]> queue clear
+        - title "title:" "subtitle:                                               <&6><player.flag[wp_cooldown].expiration.formatted||<&a>Bereit>" fade_in:0t stay:1s fade_out:1s
+        - wait 1t
+        - if <player.has_flag[levelup_cooldown]> queue clear
+        - title "title:" "subtitle:                                               <&6><player.flag[wp_cooldown].expiration.formatted||<&a>Bereit>" fade_in:0t stay:1s fade_out:1s
+        - wait 1t
+        - if <player.has_flag[levelup_cooldown]> queue clear
+        - title "title:" "subtitle:                                               <&6><player.flag[wp_cooldown].expiration.formatted||<&a>Bereit>" fade_in:0t stay:1s fade_out:1s
+        - wait 1t
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+   

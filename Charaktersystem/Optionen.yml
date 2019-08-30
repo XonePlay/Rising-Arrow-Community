@@ -1,0 +1,57 @@
+player_options:
+    type: inventory
+    debug: false
+    title: <&7><&l>Einstellungen
+    size: 9
+    definitions:
+      1: i@player_options_comat_cooldown
+      2: i@air
+      3: i@air
+      4: i@air
+      5: i@air
+      6: i@air
+      7: i@air
+      8: i@air
+      9: i@air
+    
+    slots: 
+    - "[1] [2] [3] [4] [5] [6] [7] [8] [9]"
+    
+    
+player_options_comat_cooldown:
+    type: item
+    debug: false
+    material: i@iron_sword[flags=HIDE_ATTRIBUTES]
+    display name: <&9><&l>Zeige Waffen-Cooldown 
+    lore: 
+    - "<&7><&l>Status: <&c><&l><player.flag[hide_cooldown]||<&a><&l>✔>"
+    
+    
+player_options_handler:
+    type: world
+    debug: false
+    events:
+        on player clicks in player_options:
+        - determine cancelled
+        on player drags in player_options:
+        - determine cancelled
+        on player left clicks player_options_comat_cooldown in player_options:
+        - if <player.has_flag[hide_cooldown].not> {
+            - flag player hide_cooldown:✘
+        }
+        else
+        {
+            - flag player hide_cooldown:!
+        }
+        - ^inventory open d:in@player_options
+        - ^determine cancelled
+        
+        on player right clicks in player_options:
+        - inventory open d:in@Char_Menu
+        - determine cancelled
+        
+    
+    
+    
+    
+    

@@ -1,0 +1,13 @@
+NPC_Text_Message:
+    type: task
+    debug: false
+    script:
+        - ^narrate "<&9><&l><def[1]||><&co>"
+        - ^narrate "<&9><&e><&l><def[2]||>"
+        - ^narrate "<&9><&sp>"
+        - ^narrate "<def[3]||>"
+        - ^narrate "<def[4]||>"
+        - ^narrate "<def[5]||>"
+        - ^narrate "<def[6]||>"
+        - ^narrate "<def[7]||>"
+        - ^narrate "<&sp>"

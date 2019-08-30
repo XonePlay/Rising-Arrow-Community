@@ -1,0 +1,130 @@
+Money_Join_Events:
+    type: world
+    
+    events:
+        on rmoney command:
+        - yaml load:data_saves/p_money.yml id:p_money
+        - yaml load:Items.yml id:Items
+        
+        on server start:
+        - yaml load:data_saves/p_money.yml id:p_money
+        - yaml load:Items.yml id:Items
+        
+        on server stop:
+        - yaml savefile:data_saves/p_money.yml id:P_Money
+        
+        on player join:
+        
+        
+        
+        - if <player.has_flag[rank]> {
+                - if <player.has_flag[guild]> {
+                    - bossbar create p_stats_bar_<player.uuid> players:<player> "title:<&3><&lb><player.flag[rank]><&rb> <&a><player.name> <&5>✦ <&6><player.flag[money].as_money> <&e>G <&5>✦ <&9><player.flag[guild]>" progress:1 color:BLUE style:SOLID 
+                }
+                else
+                {
+                    - bossbar create p_stats_bar_<player.uuid> players:<player> "title:<&3><&lb><player.flag[rank]><&rb> <&a><player.name> <&5>✦ <&6><player.flag[money].as_money> <&e>G" progress:1 color:BLUE style:SOLID 
+                }
+            } 
+            else 
+            {
+                - if <player.has_flag[guild]> {
+                    - bossbar create p_stats_bar_<player.uuid> players:<player> "title:<&a><player.name> <&5>✦ <&6><player.flag[money].as_money> <&e>G <&5>✦ <&9><player.flag[guild]>" progress:1 color:BLUE style:SOLID 
+                }
+                else
+                {
+                    - bossbar create p_stats_bar_<player.uuid> players:<player> "title:<&a><player.name> <&5>✦ <&6><player.flag[money].as_money> <&e>G" progress:1 color:BLUE style:SOLID
+                }
+            } 
+        - wait 4t
+        - sidebar remove players:<player>
+
+        
+        
+        on ad command:
+        - narrate "<context.args.get[1]>"
+        - determine FULFILLED silent
+        
+        
+        
+        
+        on geld command:
+        - determine fulfilled passively
+        - narrate "<&6>Gold: <&e><player.flag[money]>"
+        
+        on player flag money changed:
+        - if <player.has_flag[rank]> {
+                - if <player.has_flag[guild]> {
+                    - bossbar update p_stats_bar_<player.uuid> players:<player> "title:<&3><&lb><player.flag[rank]><&rb> <&a><player.name> <&5>✦ <&6><player.flag[money].as_money> <&e>G <&5>✦ <&9><player.flag[guild]>" progress:1 color:BLUE style:SOLID 
+                }
+                else
+                {
+                    - bossbar update p_stats_bar_<player.uuid> players:<player> "title:<&3><&lb><player.flag[rank]><&rb> <&a><player.name> <&5>✦ <&6><player.flag[money].as_money> <&e>G" progress:1 color:BLUE style:SOLID 
+                }
+            } 
+            else 
+            {
+                - if <player.has_flag[guild]> {
+                    - bossbar update p_stats_bar_<player.uuid> players:<player> "title:<&a><player.name> <&5>✦ <&6><player.flag[money].as_money> <&e>G <&5>✦ <&9><player.flag[guild]>" progress:1 color:BLUE style:SOLID 
+                }
+                else
+                {
+                    - bossbar update p_stats_bar_<player.uuid> players:<player> "title:<&a><player.name> <&5>✦ <&6><player.flag[money].as_money> <&e>G" progress:1 color:BLUE style:SOLID
+                }
+            }
+
+        
+        on player flag rank changed:
+        - if <player.has_flag[rank]> {
+                - if <player.has_flag[guild]> {
+                    - bossbar update p_stats_bar_<player.uuid> players:<player> "title:<&3><&lb><player.flag[rank]><&rb> <&a><player.name> <&5>✦ <&6><player.flag[money].as_money> <&e>G <&5>✦ <&9><player.flag[guild]>" progress:1 color:BLUE style:SOLID 
+                }
+                else
+                {
+                    - bossbar update p_stats_bar_<player.uuid> players:<player> "title:<&3><&lb><player.flag[rank]><&rb> <&a><player.name> <&5>✦ <&6><player.flag[money].as_money> <&e>G" progress:1 color:BLUE style:SOLID 
+                }
+            } 
+            else 
+            {
+                - if <player.has_flag[guild]> {
+                    - bossbar update p_stats_bar_<player.uuid> players:<player> "title:<&a><player.name> <&5>✦ <&6><player.flag[money].as_money> <&e>G <&5>✦ <&9><player.flag[guild]>" progress:1 color:BLUE style:SOLID 
+                }
+                else
+                {
+                    - bossbar update p_stats_bar_<player.uuid> players:<player> "title:<&a><player.name> <&5>✦ <&6><player.flag[money].as_money> <&e>G" progress:1 color:BLUE style:SOLID
+                }
+            }
+            
+        on player flag guild changed:
+            - if <player.has_flag[rank]> {
+                - if <player.has_flag[guild]> {
+                    - bossbar update p_stats_bar_<player.uuid> players:<player> "title:<&3><&lb><player.flag[rank]><&rb> <&a><player.name> <&5>✦ <&6><player.flag[money].as_money> <&e>G <&5>✦ <&9><player.flag[guild]>" progress:1 color:BLUE style:SOLID 
+                }
+                else
+                {
+                    - bossbar update p_stats_bar_<player.uuid> players:<player> "title:<&3><&lb><player.flag[rank]><&rb> <&a><player.name> <&5>✦ <&6><player.flag[money].as_money> <&e>G" progress:1 color:BLUE style:SOLID 
+                }
+            } 
+            else 
+            {
+                - if <player.has_flag[guild]> {
+                    - bossbar update p_stats_bar_<player.uuid> players:<player> "title:<&a><player.name> <&5>✦ <&6><player.flag[money].as_money> <&e>G <&5>✦ <&9><player.flag[guild]>" progress:1 color:BLUE style:SOLID 
+                }
+                else
+                {
+                    - bossbar update p_stats_bar_<player.uuid> players:<player> "title:<&a><player.name> <&5>✦ <&6><player.flag[money].as_money> <&e>G" progress:1 color:BLUE style:SOLID
+                }
+            }
+        
+        
+        
+        on player quit:
+            - bossbar remove p_stats_bar_<player.uuid>
+
+        on drs command:
+        - execute as_server "denizen reload scripts"
+        - determine fulfilled passively
+        
+        on player logs in for the first time:
+            - give i@golden_shovel qty:1 to:<player.inventory>
+        

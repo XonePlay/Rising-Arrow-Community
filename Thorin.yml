@@ -1,0 +1,164 @@
+Thorin:
+    type: assignment
+    debug: false
+    interact scripts:
+        - 1 Int_Thorin
+    actions:
+        on assignment:
+        - trigger name:click state:true radius:3
+        - trigger name:proximity state:true radius:5
+        
+        
+Thorin_Comp:
+    type: world
+    events:
+        on comp command:
+        - flag <player> Thorin_Follow
+  
+        - while <player.has_flag[Thorin_Follow]> && <n@1.location.distance[<player.location>]> > 5 {
+                - follow followers:<n@1> target:<player> 
+                - wait 2s  
+        }
+Int_Thorin:
+    type: interact
+    debug: false
+    Steps:
+        1:
+            Click Trigger:
+                Script:
+                - playsound <player.location> sound:npc_voice_1 custom
+                - execute as_op "menu open Thorin <player.name>"
+        2:
+            Click Trigger:
+                Script:
+                - ^playeffect <npc.location.add[0.0,1.0,0.0]> effect:SPELL_WITCH quantity:10 offset:0.2,0.1,0.2
+                - execute as_op "menu open Thorin_Wer_bist_du <player.name>"
+        3:
+            Click Trigger:
+                Script:
+                - ^playeffect <npc.location.add[0.0,1.0,0.0]> effect:SPELL_WITCH quantity:10 offset:0.2,0.1,0.2
+                - execute as_op "menu open Thorin_Default <player.name>"
+
+                
+
+                
+
+Inv_Thorin:
+    type: inventory
+    debug: false
+    title: "<&9>Handel mit Thorin" 
+    size: 9
+    definitions:
+        item1: i@Inv_Thorin_Item_Weizen
+        item2: i@Inv_Thorin_Item_Karrotte
+        item3: i@Inv_Thorin_Item_Kartoffel
+        item4: i@Inv_Thorin_Item_Empty_Slot
+        item5: i@Inv_Thorin_Item_Empty_Slot
+        item6: i@Inv_Thorin_Item_Empty_Slot
+        item7: i@Inv_Thorin_Item_Empty_Slot
+        item8: i@Inv_Thorin_Item_Empty_Slot
+        item9: i@Inv_Thorin_Item_Empty_Slot
+    slots:
+    - "[item1] [item2] [item3] [item4] [item5] [item6] [item7] [item8] [item9]"
+    
+Inv_Thorin_Item_Weizen:
+    type: item
+    material: wheat
+    display name: Weizen
+    lore:
+    - "<&f>In Besitz: <player.flag[wheat_quantity].as_int||0>"
+    - "<&f>Tageslimit: <player.flag[Inv_Thorin_Item_Weizen_daily_max].as_int>/60"
+    - "<&f>Verkaufspreis: 0.05"
+    
+    
+Inv_Thorin_Item_Karrotte:
+    type: item
+    material: i@391
+    display name: Karotten
+    
+Inv_Thorin_Item_Kartoffel:
+    type: item
+    material: i@392
+    display name: Kartoffeln
+
+Inv_Thorin_Item_Empty_Slot:
+    type: item
+    material: black_stained_glass_pane
+    display name: "<&8>***"
+    
+    
+    
+Inv_Thorin_Handler:
+    type: world
+    debug: true
+    events:
+        on player clicks Inv_Thorin_Item_Weizen in Inv_Thorin:
+        - ^if <player.flag[Inv_Thorin_Item_Weizen_daily_max]||0> >= 60 {
+            - ^determine cancelled
+        }
+        - ^if <player.inventory.quantity[i@wheat]> == 0 {
+            
+            - ^determine cancelled
+        }
+        - ^define wheat_max 60
+        - ^define wheat_take <def[wheat_max].sub[<player.flag[Inv_Thorin_Item_Weizen_daily_max]>]>
+        - ^define wheat <player.inventory.quantity[i@wheat]>
+        - ^if %wheat_take% < 10 {
+            - ^flag player Inv_Thorin_Item_Weizen_daily_max:+:%wheat_take%
+            - ^flag player money:<player.flag[money].add[<def[wheat_take].mul[0.05]>]>
+            - ^take i@wheat qty:%wheat_take%
+        } 
+        else
+        {
+            - ^flag player Inv_Thorin_Item_Weizen_daily_max:+:<proc[Inv_Thorin_Item_Weizen_proc]>
+            - ^flag player money:<player.flag[money].add[<proc[Inv_Thorin_Item_Weizen_proc].mul[0.05]>]>
+            - ^take i@wheat qty:<proc[Inv_Thorin_Item_Weizen_proc]>
+        }
+        - flag player wheat_quantity:<player.inventory.quantity[i@wheat]>
+        - ^inventory close
+        - ^inventory open d:in@Inv_Thorin
+        - ^determine cancelled
+        
+        on player clicks Inv_Thorin_Item_Karrotte in Inv_Thorin:
+        - narrate "geht"
+        - determine cancelled
+        on player clicks Inv_Thorin_Item_Kartoffel in Inv_Thorin:
+        - narrate "geht"
+        - determine cancelled
+        on player clicks Inv_Thorin_Item_Empty_Slot in Inv_Thorin:
+        - determine cancelled
+        on player drags in Inv_Thorin:
+        - determine cancelled
+        
+ 
+ 
+Inv_Thorin_Item_Weizen_proc:
+    type: procedure
+    script:
+        - if <player.inventory.quantity[i@wheat]> >= 10 {
+            - determine 10
+        }
+        else
+        {
+            - determine <player.inventory.quantity[i@wheat]>
+        }
+
+        
+        
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        

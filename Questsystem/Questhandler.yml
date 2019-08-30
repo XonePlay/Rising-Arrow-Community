@@ -1,0 +1,82 @@
+Quest_inv_script:
+    type: inventory
+    debug: false
+    title: <&2><&l>Quests
+    size: 18
+    definitions:
+        q1: i@<player.flag[quests].get[1]||i@Quest_inv_script_filler>
+        q2: i@<player.flag[quests].get[2]||i@Quest_inv_script_filler>
+        q3: i@<player.flag[quests].get[3]||i@Quest_inv_script_filler>
+        q4: i@<player.flag[quests].get[4]||i@Quest_inv_script_filler>
+        q5: i@<player.flag[quests].get[5]||i@Quest_inv_script_filler>
+        q6: i@<player.flag[quests].get[6]||i@Quest_inv_script_filler>
+        q7: i@<player.flag[quests].get[7]||i@Quest_inv_script_filler>
+        q8: i@<player.flag[quests].get[8]||i@Quest_inv_script_filler>
+        q9: i@<player.flag[quests].get[9]||i@Quest_inv_script_filler>
+        q10: i@<player.flag[quests].get[10]||i@Quest_inv_script_filler>
+        q11: i@<player.flag[quests].get[11]||i@Quest_inv_script_filler>
+        q12: i@<player.flag[quests].get[12]||i@Quest_inv_script_filler>
+        q13: i@<player.flag[quests].get[13]||i@Quest_inv_script_filler>
+        q14: i@<player.flag[quests].get[14]||i@Quest_inv_script_filler>
+        q15: i@<player.flag[quests].get[15]||i@Quest_inv_script_filler>
+        q16: i@<player.flag[quests].get[16]||i@Quest_inv_script_filler>
+        q17: i@<player.flag[quests].get[17]||i@Quest_inv_script_filler>
+        q18: i@<player.flag[quests].get[18]||i@Quest_inv_script_filler>
+    slots:
+    - "[q1] [q2] [q3] [q4] [q5] [q6] [q7] [q8] [q9]"
+    - "[q10] [q11] [q12] [q13] [q14] [q15] [q16] [q17] [q18]"
+         
+         
+Quest_inv_script_filler:
+    type: item
+    debug: false
+    material: black_stained_glass_pane
+    display name: <&7>...
+    
+    
+Quest_inv_script_default_handlers:
+    type: world
+    debug: false
+    events:
+        on player clicks in Quest_inv_script:
+        - determine cancelled
+        on player drags in Quest_inv_script:
+        - determine cancelled
+        on player right clicks in Quest_inv_script:
+        - inventory open d:in@Char_menu
+        - determine cancelled
+
+    
+  
+
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

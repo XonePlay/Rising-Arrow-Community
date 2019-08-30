@@ -1,0 +1,95 @@
+Plot_Inv:
+    type: inventory
+    debug: false
+    title: <&9><&l>Meine Heimat
+    size: 9
+    definitions:
+      home: i@home_Plot_Inv
+      home2: i@home2_Plot_Inv
+      rieva: i@freunde_Plot_Inv
+      freunde: i@rieva_Plot_Inv
+      a: i@filler_item_Plot_Inv
+    slots: 
+    - "[home] [home2] [a] [a] [a] [a] [freunde] [a] [rieva]" 
+    
+Plot_Inv_handler:
+    type: world
+    debug: false
+    events:
+        on player left clicks home_Plot_Inv in Plot_Inv:
+        - run unfreeze_player2 player:<player>
+        - if <player.has_flag[has_plot]> {
+            - execute as_player "plot home 1" silent
+        }
+        else
+        {
+            - execute as_op "mvtp Plotsmap" silent
+            - flag <player> info_plotstart:!
+            - wait 1s
+            - execute as_op "plot auto" silent
+            - wait 5s
+            - give i@bread qty:8
+            - ^give i@log qty:8
+            - ^give i@sapling qty:3
+            - ^give i@seeds qty:3
+            - ^give i@torch qty:4
+            - ^flag player has_plot
+        }
+        - determine cancelled
+        on player left clicks home2_Plot_Inv in Plot_Inv:
+        - if <player.has_flag[info_plotstart]> determine cancelled
+        - execute as_player "plot home 2" silent
+        - determine cancelled
+        on player left clicks freunde_Plot_Inv in Plot_Inv:
+        - inventory open d:in@friends_menu
+        - determine cancelled
+        on player left clicks rieva_Plot_Inv in Plot_Inv:
+        - if <player.has_flag[info_plotstart]> determine cancelled
+        - execute as_player "spawn" silent
+        - determine cancelled        
+        on player left clicks filler_item_Plot_Inv in Plot_Inv:
+        - determine cancelled
+        on player right clicks in Plot_Inv:
+        - inventory open d:in@Char_menu
+        - determine cancelled
+
+    
+    
+    
+    
+home_Plot_Inv:
+    type: item
+    debug: false
+    material: "human_skull[display_name=<&7><&l>Teleport: <&f><&l>Insel 1;skull_skin=eb1fc1a8-763e-442f-bf10-302b3beebb32|eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTI2Yjc3MjMyOWNmMzJmODY0M2M0OTI4NjI2YjZhMzI1MjMzZmY2MWFhOWM3NzI1ODczYTRiZDY2ZGIzZDY5MiJ9fX0=]"
+
+
+    
+    
+home2_Plot_Inv:
+    type: item
+    debug: false
+    material: "human_skull[display_name=<&7><&l>Teleport: <&e><&l>Insel 2;skull_skin=fdea850d-ae8b-4e10-8b03-6883494ae266|eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTRiZjg5M2ZjNmRlZmFkMjE4Zjc4MzZlZmVmYmU2MzZmMWMyY2MxYmI2NTBjODJmY2NkOTlmMmMxZWU2In19fQ==]"
+    lore:
+    - "<&7>Du hast momentan noch keine zweite Insel!"
+    
+    
+freunde_Plot_Inv:
+    type: item
+    debug: false
+    material: "human_skull[display_name=<&7><&l>Teleport: <&5><&l>Freunde;skull_skin=b46b2241-5546-48db-a457-a2dbad23db27|eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2U0MzM2NTZiNDQzNjY4ZWQwM2RhYzhjNDQyNzIyYTJhNDEyMjFiZThiYjQ4ZTIzYjM1YmQ4YzJlNTlmNjMifX19]"
+
+    
+rieva_Plot_Inv:
+    type: item
+    debug: false
+    material: "human_skull[display_name=<&7><&l>Teleport: <&6><&l>Rieva;skull_skin=1d2bf3fe-1b67-495f-995d-435693e90fa0|eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmY3NWQxYjc4NWQxOGQ0N2IzZWE4ZjBhN2UwZmQ0YTFmYWU5ZTdkMzIzY2YzYjEzOGM4Yzc4Y2ZlMjRlZTU5In19fQ==]"
+    
+    
+filler_item_Plot_Inv:
+    type: item
+    debug: false
+    material: black_stained_glass_pane
+    display name: <&8>...
+
+
+ 

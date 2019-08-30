@@ -1,0 +1,1292 @@
+friends_menu:
+    type: inventory
+    debug: false
+    title: <&5><&l>Freunde
+    size: 45
+    definitions:
+      1: <proc[1_friends]>
+      2: <proc[2_friends]>
+      3: <proc[3_friends]>
+      4: <proc[4_friends]>
+      5: <proc[5_friends]>
+      6: <proc[6_friends]>
+      7: <proc[7_friends]>
+      8: <proc[8_friends]>
+      9: <proc[9_friends]>
+      10: <proc[10_friends]>
+      11: <proc[11_friends]>
+      12: <proc[12_friends]>
+      13: <proc[13_friends]>
+      14: <proc[14_friends]>
+      15: <proc[15_friends]>
+      16: <proc[16_friends]>
+      17: <proc[17_friends]>
+      18: <proc[18_friends]>
+      19: <proc[19_friends]>
+      20: <proc[20_friends]>
+      21: <proc[21_friends]>
+      22: <proc[22_friends]>
+      23: <proc[23_friends]>
+      24: <proc[24_friends]>
+      25: <proc[25_friends]>
+      26: <proc[26_friends]>
+      27: <proc[27_friends]>
+      28: <proc[28_friends]>
+      29: <proc[29_friends]>
+      30: <proc[30_friends]>
+      31: <proc[31_friends]>
+      32: <proc[32_friends]>
+      33: <proc[33_friends]>
+      34: <proc[34_friends]>
+      35: <proc[35_friends]>
+      36: <proc[36_friends]>
+      37: <proc[37_friends]>
+      38: <proc[38_friends]>
+      39: <proc[39_friends]>
+      40: <proc[40_friends]>
+      41: <proc[41_friends]>
+      42: <proc[42_friends]>
+      43: <proc[43_friends]>
+      44: <proc[44_friends]>
+      45: <proc[45_friends]>
+
+    slots: 
+    - "[1] [2] [3] [4] [5] [6] [7] [8] [9]"
+    - "[10] [11] [12] [13] [14] [15] [16] [17] [18]"
+    - "[19] [20] [21] [22] [23] [24] [25] [26] [27]" 
+    - "[28] [29] [30 [31] [32] [33] [34] [35] [36]" 
+    - "[37] [38] [39] [40] [41] [42] [43] [44] [45]"
+
+
+friends_menu_handler:
+    type: world
+    debug: true
+    events:
+        
+        
+        on player clicks in friends_menu:
+        - if <context.click> == RIGHT {
+            - inventory open d:in@Char_menu
+        }
+        - determine cancelled
+        on player drags in friends_menu:
+        - determine cancelled
+        
+        
+ 
+        on player left clicks in friends_menu:
+        - if <context.item.skin||none> == none queue clear
+        - define 1 <context.item.skin||>
+        - define 1 p@<def[1]>
+        - narrate "<def[1]>"
+        - flag player friend_info_name:<def[1].name>
+        - flag player friend_info_entity:<def[1]>
+        - inventory open d:in@friends_menu_friend_info
+        
+
+        
+        
+   
+filler_item_friends:
+    type: item
+    debug: false
+    material: i@black_stained_glass_pane
+    display name: <&8>...
+    
+    
+player_right_click_menu_inv:
+    type: inventory
+    debug: false
+    title: <&5><&l>Freunde
+    size: 9
+    definitions:
+      1: 0
+      2: i@player_right_click_menu_add_friend
+      3: 0
+      4: 0
+      5: i@player_right_click_menu_whois
+      6: 0
+      7: 0
+      8: i@player_right_click_menu_add_group
+      9: 0
+    
+    slots: 
+    - "[1] [2] [3] [4] [5] [6] [7] [8] [9]"
+    
+    
+
+player_right_click_menu_add_friend:
+    type: item
+    debug: false
+    material: player_head[display_name=<&5><&l>Freunde;skull_skin=b46b2241-5546-48db-a457-a2dbad23db27|eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2U0MzM2NTZiNDQzNjY4ZWQwM2RhYzhjNDQyNzIyYTJhNDEyMjFiZThiYjQ4ZTIzYjM1YmQ4YzJlNTlmNjMifX19]
+    display name: <&a><&l>Freundschaftsanfrage senden
+   
+
+player_right_click_menu_whois:
+    type: item
+    debug: false
+    material: i@player_head[display_name=<&6><&l><player.flag[right_click_menu_name]>;skull_skin=<player.flag[right_click_menu_uuid]>]
+    
+player_right_click_menu_add_group:
+    type: item
+    debug: false
+    material: player_head[display_name=<&5><&l>Freunde;skull_skin=ebfde078-cc98-48f1-ac64-608c8545cc28|eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjlkZTYwMWRlZTNmZmVjYTRkNTQ1OTVmODQ0MjAxZDBlZDIwOTFhY2VjNDU0OGM2OTZiYjE2YThhMTU4ZjYifX19]
+    display name: <&a><&l>Zur Party einladen
+    
+player_right_click_menu:
+    type: world
+    debug: false
+    events:
+        on player right clicks entity:
+        - if <context.entity.type> == Player {
+            - if <player.is_sneaking> {
+                - flag player right_click_menu_entity:<context.entity>
+                - flag player right_click_menu_uuid:<context.entity.replace[p@].with[]>
+                - flag player right_click_menu_name:<context.entity.name>
+            
+                - inventory open d:in@player_right_click_menu_inv
+            }
+        }
+        
+        on player clicks in player_right_click_menu_inv:
+        - determine cancelled
+        
+        on player drags in player_right_click_menu_inv:
+        - determine cancelled
+        
+        on player right clicks in player_right_click_menu_inv:
+        - inventory close
+        - determine cancelled
+        
+        
+        on player clicks player_right_click_menu_add_group in player_right_click_menu_inv:
+        - define player2 <player.flag[right_click_menu_entity]>
+        - if <player.flag[gruppen_liste].size> >= 5 {
+                - narrate "<&a><&l>Party ist bereits voll!"
+                - determine cancelled
+                - queue clear
+            }
+        - if <def[player2].has_flag[is_in_group]> {
+            - narrate "<&a><&l>Spieler ist bereits in einer Party!"
+            - queue clear
+        }
+        - if <player.has_flag[add_group_cooldown]> {
+            - narrate "<&a><&l>Warte auf Antwort... <&2><&l>(<player.flag[add_group_cooldown].expiration.formatted>)"
+            - queue clear
+        }
+        - flag player add_group_cooldown duration:35s
+        - flag <player.flag[right_click_menu_entity]> group_name:<player.name>
+        - flag <player.flag[right_click_menu_entity]> group_entity:<player>
+        - flag <player.flag[right_click_menu_entity]> group_add duration:30s
+        - narrate "<&a><&l><player.flag[group_name]> lädt dich zur Party ein! <&2><&l>/ptaccept <&a><&l>zum annehmen." player:<player.flag[right_click_menu_entity]>
+        - narrate "<&a><&l>Partyeinladung an <player.flag[right_click_menu_name]> gesendet!"
+        - inventory close
+        - determine cancelled
+        
+        
+        
+        on ptaccept command:
+        - define player2 <player.flag[group_entity]>
+        - determine fulfilled passively
+        - if <player.has_flag[group_add]> {
+            - define player2_group_list <def[player2].flag[gruppen_liste].as_list.exclude[<player>]>
+            - if <def[player2].flag[gruppen_liste].size> >= 5 {
+                - determine fulfilled passively
+                - narrate "<&a><&l>Gruppe ist bereits voll!"
+                - queue clear
+            }
+            - flag player is_in_group
+            - flag <player.flag[group_entity]> is_in_group
+            
+            
+
+            
+            
+            - foreach <def[player2_group_list]> {
+                - flag player is_in_group
+                - flag <def[value]> gruppen_liste:|:<player>
+            }
+            
+            - foreach <def[player2_group_list]> {
+                - flag player gruppen_liste:|:<def[value]>
+            }
+
+            
+            
+            - narrate "<&a><&l>Party beigetreten!"
+            
+          
+            
+            
+            
+            - flag <player.flag[group_entity]> add_group_cooldown:!
+            - wait 1s
+            - foreach <player.flag[gruppen_liste].as_list> {
+                - if <def[value]> != <player> {
+                    - narrate "<&a><&l><player.flag[gruppen_liste].get[<player.flag[gruppen_liste].size>].name> ist der Party beigetreten! <&nl><&a><&l>/ptleave um die Party zu verlassen." player:<def[value]>
+                }
+            }
+            - determine fulfilled
+        }
+        else
+        {
+            - narrate "<&a><&l>Dich hat niemand eingeladen! <&2><&l>(Cooldown 30s)"
+            - determine fulfilled
+        }
+        - determine fulfilled
+        
+        
+        on ptleave command:
+        - if <player.flag[is_in_group].not> queue clear
+        - define player_group_list <player.flag[gruppen_liste].as_list.exclude[<player>]>
+        - foreach <def[player_group_list]> {
+            - if <def[value]> != <player> {
+                - flag <def[value]> group_left:<player.name>
+                - flag <def[value]> gruppen_liste:<-:<player>
+                - flag player is_in_group:!
+                - if <def[value].flag[gruppen_liste].size> == 1 {
+                    - flag <def[value]> is_in_group:!
+                }
+                - flag player gruppen_liste:<player.flag[gruppen_liste].get[1]>
+                - flag player gruppen_liste:<player.flag[gruppen_liste].get[1]>
+                - flag player gruppen_liste:<player.flag[gruppen_liste].get[1]>
+                - flag player gruppen_liste:<player.flag[gruppen_liste].get[1]>
+                - narrate "<&a><&l><player.flag[group_left]> hat die Party verlassen!" player:<def[value]>
+                - determine fulfilled passively
+            }
+            else
+            {
+                - narrate "<&a>Du hast die Party verlassen!"
+                - determine fulfilled passively
+            }
+        }
+        
+        
+        on player join:
+        - flag player gruppen_liste:!
+        - flag <player> is_in_group:!
+        - wait 1t
+        - flag player gruppen_liste:<player>
+        
+        on player quit:
+        - if <player.has_flag[is_in_group].not> queue clear
+        - define player_group_list <player.flag[gruppen_liste].as_list.exclude[<player>]>
+        - foreach <def[player_group_list]> {
+            - if <def[value]> != <player> {
+                - flag <def[value]> group_left:<player.name>
+                - flag <def[value]> gruppen_liste:<-:<player>
+                - flag player is_in_group:!
+                - flag player gruppen_liste:<player.flag[gruppen_liste].get[1]>
+                - flag player gruppen_liste:<player.flag[gruppen_liste].get[1]>
+                - flag player gruppen_liste:<player.flag[gruppen_liste].get[1]>
+                - flag player gruppen_liste:<player.flag[gruppen_liste].get[1]>
+                - narrate "<&a><player.flag[group_left]> hat die Party verlassen!" player:<def[value]>
+            }
+        
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        on player clicks player_right_click_menu_add_friend in player_right_click_menu_inv:
+        - if <player.has_flag[add_friend_cooldown]> {
+            - narrate "<&5><&l>Warte auf Antwort... <&6>(<player.flag[add_friend_cooldown].expiration.formatted>)"
+            - queue clear
+        }
+        - if <yaml[p_friends].read[<player>].contains[<player.flag[right_click_menu_entity]>]> {
+            - narrate "<&5><&l>Du bist bereits mit <player.flag[right_click_menu_name]> befreundet!"
+            - queue clear
+        }
+        - if <yaml[p_friends].read[<player>].size> == 45 {
+            - narrate "<&5><&l>Du hast das maximale Limit an Freunden erreicht! <&6><&l>(45 Freunde)"
+            - queue clear
+        }
+        
+        - flag player add_friend_cooldown duration:35s
+        - flag <player.flag[right_click_menu_entity]> friend_name:<player.name>
+        - flag <player.flag[right_click_menu_entity]> friend_entity:<player>
+        - flag <player.flag[right_click_menu_entity]> friend_add duration:30s
+        - narrate "<&5><&l><player.flag[friend_name]> hat dir eine Freundschaftsanfrage geschickt! <&nl><&6><&l>/faccept <&5><&l>zum annehmen." player:<player.flag[right_click_menu_entity]>
+        - narrate "<&5><&l>Freundschaftsanfrage an <player.flag[right_click_menu_name]> gesendet!"
+        - inventory close
+        - determine cancelled
+        
+        on faccept command:
+        - if <yaml[p_friends].read[<player>].contains[<player.flag[friend_entity]>]> {
+            - narrate "<&5><&l>Du bist bereits mit <player.flag[friend_name]> befreundet!"
+            - queue clear
+        }
+        - if <yaml[p_friends].read[<player.flag[friend_entity]>].size> == 45 {
+            - narrate "<&5><&l><player.flag[friend_name]> hat das max Limit an Freunden erreicht! <&6><&l>(45 Freunde)"
+            - queue clear
+        }
+        - if <yaml[p_friends].read[<player>].size> == 45 {
+            - narrate "<&5><&l>Max Limit an Freunden erreicht! <&6><&l>(45 Freunde)"
+            - queue clear
+        }
+        - if <player.has_flag[friend_add]> {
+            - yaml set id:p_friends <player>:->:<player.flag[friend_entity]>
+            - ^yaml set id:p_friends <player.flag[friend_entity]>:->:<player>
+            - define online <player.flag[friend_entity]>
+            - if <def[online].is_online> {
+                - narrate "<&5><&l><player.flag[right_click_menu_name]> hat die Freundschaftsanfrage angenommen!" player:<player.flag[friend_entity]> }
+            - narrate "<&5><&l>Du bist jetzt mit <player.flag[friend_name]> befreundet!"
+            - flag <player.flag[friend_entity]> add_friend_cooldown:!
+        }
+        else
+        {
+            - narrate "<&5><&l>Dich hat niemand eingeladen! <&6>(Cooldown 30s)"
+        }
+        - determine fulfilled passively
+        
+        
+        
+        
+ 
+    
+    
+    
+friends_menu_friend_info:
+    type: inventory
+    debug: false
+    title: <&4><player.flag[friend_info_name]>
+    size: 9
+    definitions:
+      1: i@friends_menu_friend_info_plot_1
+      2: i@friends_menu_friend_info_plot_2
+      3: i@friends_menu_friend_info_delete_friend
+      4: i@player_right_click_menu_add_group
+      a: i@friends_menu_friend_info_filler
+    slots:
+    - "[1] [2] [a] [a] [a] [a] [4] [a] [3]"
+    
+    
+friends_menu_friend_info_handler:
+    type: world
+    debug: false
+    events:
+        on player clicks in friends_menu_friend_info:
+        - determine cancelled
+        on player drags in friends_menu_friend_info:
+        - determine cancelled
+        on player left clicks friends_menu_friend_info_plot_1 in friends_menu_friend_info:
+        - if <player.has_flag[info_plotstart]> determine cancelled
+        - execute as_player "plot tp <player.flag[friend_info_name]> 1" silent
+        - determine cancelled
+        on player left clicks friends_menu_friend_info_plot_2 in friends_menu_friend_info:
+        - if <player.has_flag[info_plotstart]> determine cancelled
+        - execute as_player "plot tp <player.flag[friend_info_name]> 2" silent
+        - determine cancelled
+        
+        
+        
+        
+        
+        on player left clicks player_right_click_menu_add_group in friends_menu_friend_info:
+        - define player2 <player.flag[friend_info_entity]>
+        - if <def[player2].is_online.not> {
+            - narrate "<&a><&l><player.flag[friend_info_name]> ist gerade offline!"
+            - determine cancelled
+            - queue clear
+        }
+        - if <player.flag[gruppen_liste].size> >= 5 {
+            - narrate "<&a><&l>Party ist bereits voll!"
+            - determine cancelled
+            - queue clear
+        }
+        - if <%def[player2].has_flag[is_in_group]> {
+            - narrate "<&a><&l>Spieler ist bereits in einer Party!"
+            - queue clear
+        }
+        - if <player.has_flag[add_group_cooldown]> {
+            - narrate "<&a><&l>Warte auf Antwort... <&2><&l>(<player.flag[add_group_cooldown].expiration.formatted>)"
+            - queue clear
+        }
+        - flag player add_group_cooldown duration:35s
+        - flag <player.flag[friend_info_entity]> group_name:<player.name>
+        - flag <player.flag[friend_info_entity]> group_entity:<player>
+        - flag <player.flag[friend_info_entity]> group_add duration:30s
+        - narrate "<&a><&l><player.flag[group_name]> lädt dich zur Party ein! <&nl><&2><&l>/ptaccept <&a><&l>zum annehmen." player:<player.flag[friend_info_entity]>
+        - narrate "<&a><&l>Partyeinladung an <player.flag[friend_info_name]> gesendet!"
+        - inventory close
+        - determine cancelled
+
+        
+        
+        
+        
+        
+        on player left clicks friends_menu_friend_info_delete_friend in friends_menu_friend_info:
+        - inventory open d:in@friends_menu_remove_friend
+        - determine cancelled
+        on player right clicks in friends_menu_friend_info:
+        - inventory open d:in@friends_menu
+        - determine cancelled
+    
+    
+friends_menu_friend_info_plot_1:
+    type: item
+    debug: false
+    material: "player_head[display_name=<&7><&l>Teleport: <&f><&l>Insel 1;skull_skin=eb1fc1a8-763e-442f-bf10-302b3beebb32|eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTI2Yjc3MjMyOWNmMzJmODY0M2M0OTI4NjI2YjZhMzI1MjMzZmY2MWFhOWM3NzI1ODczYTRiZDY2ZGIzZDY5MiJ9fX0=]"
+
+friends_menu_friend_info_plot_2:
+    type: item
+    debug: false
+    material: "player_head[display_name=<&7><&l>Teleport: <&e><&l>Insel 2;skull_skin=fdea850d-ae8b-4e10-8b03-6883494ae266|eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTRiZjg5M2ZjNmRlZmFkMjE4Zjc4MzZlZmVmYmU2MzZmMWMyY2MxYmI2NTBjODJmY2NkOTlmMmMxZWU2In19fQ==]"
+
+friends_menu_friend_info_delete_friend:
+    type: item
+    debug: false
+    material: barrier
+    display name: Freund löschen
+    
+friends_menu_friend_info_filler:
+    type: item
+    debug: false
+    material: i@black_stained_glass_pane
+    display name: <&8>... 
+    
+
+    
+    
+    
+friends_menu_remove_friend:
+    type: inventory
+    debug: false
+    title: <&4><player.flag[friend_info_name]> löschen?
+    size: 9
+    definitions:
+      1: i@friends_menu_remove_friend_ja
+      2: i@friends_menu_remove_friend_nein
+      a: i@friends_menu_remove_friend_filler
+    slots:
+    - "[a] [1] [a] [a] [a] [a] [a] [2] [a]"
+    
+friends_menu_remove_friend_handler:
+    type: world
+    debug: false
+    events:
+        on player clicks in friends_menu_remove_friend:
+        - determine cancelled
+        on player drags in friends_menu_remove_friend:
+        - determine cancelled
+        on player left clicks friends_menu_remove_friend_nein in friends_menu_remove_friend:
+        - inventory open d:in@friends_menu_friend_info
+        - determine cancelled
+        on player left clicks friends_menu_remove_friend_ja in friends_menu_remove_friend:
+        - yaml set id:p_friends <player>:<-:<player.flag[friend_info_entity]>
+        - ^yaml set id:p_friends <player.flag[friend_info_entity]>:<-:<player>
+        - define online1 <player.flag[friend_info_entity]>
+        - if <def[online1].is_online> {
+            - flag <player.flag[friend_info_entity]> player_who_removes:<player.name>
+            - narrate "<&5><&l><player.flag[player_who_removes]> wurde aus deiner Freundesliste gelöscht." player:<player.flag[friend_info_entity]> }
+        - narrate "<&5><&l><player.flag[friend_info_name]> wurde aus deiner Freundesliste gelöscht."
+        - flag <player.flag[friend_info_entity]> player_who_removes:!
+        - inventory open d:in@friends_menu
+        - determine cancelled
+        on player right clicks in friends_menu_remove_friend:
+        - inventory open d:in@friends_menu_friend_info
+        - determine cancelled
+    
+    
+    
+friends_menu_remove_friend_ja:
+    type: item
+    debug: false
+    material: i@green_wool
+    display name: <&2>Ja
+    
+friends_menu_remove_friend_nein:
+    type: item
+    debug: false
+    material: i@red_wool
+    display name: <&4>Nein
+    
+friends_menu_remove_friend_filler:
+    type: item
+    debug: false
+    material: i@black_stained_glass_pane
+    display name: <&8>...
+    
+
+    
+    
+1_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[1]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[1].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[1].name>
+        - if <yaml[p_friends].read[<player>].get[1].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - ^determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[1].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+   
+2_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[2]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[2].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[2].name>
+        - if <yaml[p_friends].read[<player>].get[2].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[2].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+3_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[3]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[3].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[3].name>
+        - if <yaml[p_friends].read[<player>].get[3].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[3].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+4_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[4]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[4].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[4].name>
+        - if <yaml[p_friends].read[<player>].get[4].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[4].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+5_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[5]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[5].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[5].name>
+        - if <yaml[p_friends].read[<player>].get[5].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[5].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+6_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[6]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[6].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[6].name>
+        - if <yaml[p_friends].read[<player>].get[6].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[6].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+7_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[7]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[7].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[7].name>
+        - if <yaml[p_friends].read[<player>].get[7].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[7].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+8_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[8]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[8].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[8].name>
+        - if <yaml[p_friends].read[<player>].get[8].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[8].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+9_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[9]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[9].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[9].name>
+        - if <yaml[p_friends].read[<player>].get[9].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[9].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+10_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[10]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[10].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[10].name>
+        - if <yaml[p_friends].read[<player>].get[10].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[10].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+11_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[11]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[11].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[11].name>
+        - if <yaml[p_friends].read[<player>].get[11].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[11].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+12_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[12]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[12].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[12].name>
+        - if <yaml[p_friends].read[<player>].get[12].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[12].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+13_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[13]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[13].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[13].name>
+        - if <yaml[p_friends].read[<player>].get[13].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[13].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+14_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[14]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[14].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[14].name>
+        - if <yaml[p_friends].read[<player>].get[14].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[14].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+15_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[15]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[15].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[15].name>
+        - if <yaml[p_friends].read[<player>].get[15].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[15].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+16_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[16]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[16].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[16].name>
+        - if <yaml[p_friends].read[<player>].get[16].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[16].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+17_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[17]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[17].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[17].name>
+        - if <yaml[p_friends].read[<player>].get[17].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[17].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+18_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[18]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[18].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[18].name>
+        - if <yaml[p_friends].read[<player>].get[18].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[18].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+19_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[19]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[19].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[19].name>
+        - if <yaml[p_friends].read[<player>].get[19].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[19].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+20_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[20]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[20].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[20].name>
+        - if <yaml[p_friends].read[<player>].get[20].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[20].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+21_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[21]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[21].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[21].name>
+        - if <yaml[p_friends].read[<player>].get[21].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[21].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+22_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[22]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[22].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[22].name>
+        - if <yaml[p_friends].read[<player>].get[22].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[22].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+23_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[23]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[23].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[23].name>
+        - if <yaml[p_friends].read[<player>].get[23].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[23].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+24_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[24]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[24].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[24].name>
+        - if <yaml[p_friends].read[<player>].get[24].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[24].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+25_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[25]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[25].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[25].name>
+        - if <yaml[p_friends].read[<player>].get[25].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[25].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+26_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[26]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[26].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[26].name>
+        - if <yaml[p_friends].read[<player>].get[26].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[26].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+27_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[27]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[27].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[27].name>
+        - if <yaml[p_friends].read[<player>].get[27].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[27].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+28_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[28]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[28].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[28].name>
+        - if <yaml[p_friends].read[<player>].get[28].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[28].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+29_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[29]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[29].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[29].name>
+        - if <yaml[p_friends].read[<player>].get[29].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[29].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+30_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[30]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[30].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[30].name>
+        - if <yaml[p_friends].read[<player>].get[30].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[30].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+31_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[31]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[31].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[31].name>
+        - if <yaml[p_friends].read[<player>].get[31].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[31].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+32_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[32]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[32].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[32].name>
+        - if <yaml[p_friends].read[<player>].get[32].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[32].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+33_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[33]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[33].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[33].name>
+        - if <yaml[p_friends].read[<player>].get[33].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[33].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+34_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[34]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[34].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[34].name>
+        - if <yaml[p_friends].read[<player>].get[34].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[34].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+35_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[35]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[35].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[35].name>
+        - if <yaml[p_friends].read[<player>].get[35].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[35].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+36_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[36]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[36].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[36].name>
+        - if <yaml[p_friends].read[<player>].get[36].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[36].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+37_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[37]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[37].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[37].name>
+        - if <yaml[p_friends].read[<player>].get[37].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[37].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+38_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[38]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[38].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[38].name>
+        - if <yaml[p_friends].read[<player>].get[38].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[38].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+39_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[39]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[39].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[39].name>
+        - if <yaml[p_friends].read[<player>].get[39].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[39].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+40_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[40]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[40].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[40].name>
+        - if <yaml[p_friends].read[<player>].get[40].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[40].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+41_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[41]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[41].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[41].name>
+        - if <yaml[p_friends].read[<player>].get[41].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[41].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+42_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[42]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[42].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[42].name>
+        - if <yaml[p_friends].read[<player>].get[42].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[42].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+43_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[43]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[43].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[43].name>
+        - if <yaml[p_friends].read[<player>].get[43].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[43].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+44_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[44]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[44].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[44].name>
+        - if <yaml[p_friends].read[<player>].get[44].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[44].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+
+45_friends:
+    type: procedure
+    debug: false
+    script:
+        - if <yaml[p_friends].read[<player>].get[45]||none> == none {
+            - determine i@filler_item_friends
+            - queue clear
+        }
+        - define friend <yaml[p_friends].read[<player>].get[45].replace[p@].with[]>
+        - define name <yaml[p_friends].read[<player>].get[45].name>
+        - if <yaml[p_friends].read[<player>].get[45].is_online||> {
+            - define pl_online "<&7>Status: <&a>Online"
+        } else {
+            - define pl_online "<&7>Status: <&c>Offline"
+        }
+        - determine "i@player_head[display_name=<&6><&l><yaml[p_friends].read[<player>].get[45].name>;lore=%pl_online%||<&7>Zuletzt online:|<&e><p@%name%.last_played.time>;skull_skin=%friend%]"
+

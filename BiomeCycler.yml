@@ -1,0 +1,76 @@
+BiomeCycler:
+    type: world
+    debug: true
+    events:
+        on player left clicks block with BiomeWand:
+        - ^adjust <context.location> biome:<player.flag[biomewand]>
+        - ^adjust <context.location.chunk> refresh_chunk
+        - ^determine cancelled
+        
+        on player right clicks block with BiomeWand:
+        - if <player.is_sneaking> {
+            - ^flag player biomewand:<player.location.cursor_on[4].biome.formatted.replace[<&sp>].with[_]>
+            - ^narrate "<&6><player.location.cursor_on[4].biome.formatted> <&7>ausgewählt!"
+        } 
+        else
+        {
+            - define biome_length <proc[Wand_Proc].size>
+            - ^define biomelist <proc[Wand_Proc].get[<util.random.int[1].to[%biome_length%]>]>
+            - ^narrate "<&6>%biomelist%"
+            - ^flag player biomewand:%biomelist%
+        }
+        on biomeselect command:
+        - define arg_size <context.args.size>
+        - if %arg_size% == 0 {
+            - narrate "<&c>Kein Biom ausgewählt!"
+            - determine fulfilled
+            - queue clear }
+        - if <context.args.get[1]> ==  list {
+            - narrate "forest|wooded_hills|jungle|jungle_Hills|modified_jungle|dark_forest|modified_gravelly_mountains|birch_forest|tall_birch_forest|taiga|taiga_mountains|giant_spruce_taiga|flower_forest|swamp|snowy_taiga|taiga|giant_spruce_taiga|snowy_tundra|ice_spikes|mountain_edge|mountains|wooded_mountains|snowy_mountains|gravelly_mountains|nether|the_end|the_void|desert|dark_forest|shattered_savanna|beach|badlands|eroded_badlands|badlands_plateau|plains|ocean|deep_ocean|frozen_ocean|lukewarm_ocean|river|frozen_rover|mushroom_fields|flower_forest|sunflower_plains|stone_shore"
+            - determine fulfilled
+            - queue clear
+        }  
+        - flag player biomewand:<context.args.get[1]>
+        - narrate "<&6><context.args.get[1]> <&7>ausgewählt!"
+        - determine fulfilled
+               
+        
+teleport_biome:
+    type: task
+    debug: false
+    speed: 4t
+    script:
+    - adjust <
+        
+        
+BiomeWand:
+    type: item
+    debug: false
+    material: blaze_rod
+    display name: <&5>Biome Wand
+    
+    
+BiomeWand_command:
+    type: command
+    debug: false
+    name: biomewand
+    aliases: bw
+    script:
+    - give i@BiomeWand qty:1
+
+
+biomeselect_command:
+    type: command
+    debug: false
+    name: biomeselect
+    aliases: bs
+    usage: /bs <&lt>Biom<&gt>
+    
+Wand_Proc:
+    type: procedure
+    debug: false
+    script:
+    - define biomelist li@forest|123|wooded_hills|jungle|jungle_Hills|modified_jungle|dark_forest|modified_gravelly_mountains|birch_forest|tall_birch_forest|taiga|taiga_mountains|giant_spruce_taiga|flower_forest|swamp|snowy_taiga|taiga|giant_spruce_taiga|snowy_tundra|ice_spikes|mountain_edge|mountains|wooded_mountains|snowy_mountains|gravelly_mountains|nether|the_end|the_void|desert|dark_forest|shattered_savanna|beach|badlands|eroded_badlands|badlands_plateau|plains|ocean|deep_ocean|frozen_ocean|lukewarm_ocean|river|frozen_rover|mushroom_fields|flower_forest|sunflower_plains|stone_shore
+    - determine %biomelist%
+    
+ 

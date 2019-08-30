@@ -1,0 +1,309 @@
+Menuekompass:
+    type: item
+    material: 347
+    debug: false
+    display name: <&2><&l>Journal
+    lore:
+    - "<&7>Rechtsklick zum öffnen!"
+
+    
+Kompass_world:
+    type: world
+    debug: false
+    events:
+        on menucompass command:
+        - give i@Menuekompass qty:1
+        on player drops Menuekompass:
+        - actionbar "<&6>[<&4><&l>Du kannst diesen Gegenstand nicht wegwerfen.<&6>]"
+        - determine cancelled
+        on player right clicks with Menuekompass:
+        - inventory open d:in@Char_menu
+        - determine cancelled
+        on player clicks Menuekompass in inventory:
+        - determine cancelled
+        on player clicks in inventory:
+        - if <context.hotbar_button> == 9 {
+            - determine cancelled
+        }
+        
+        on pmenu command:
+        - inventory open d:in@Char_menu
+
+        
+        on player joins:
+        - if <player.name> == Adeptx3 queue clear
+        - adjust <player> item_slot:9
+        - adjust <player> item_in_hand:i@air
+        - adjust <player> item_in_hand:i@Menuekompass
+        - wait 1s
+        - run unfreeze_player2 player:<player>
+
+
+
+
+
+
+
+
+
+
+Char_menu:
+    type: inventory
+    debug: false
+    title: <&2><&l>Journal
+    size: 45
+    definitions:
+      plot: i@plot_item
+      char: i@char_item
+      quests: i@quests_item
+      charstats: i@charstats_item
+      freunde: i@freunde_item
+      gilde: i@gilde_item
+      optionen: i@optionen_item
+      a: i@filler_item
+        
+    slots: 
+    - "[a] [a] [a] [a] [a] [a] [a] [a] [a]"
+    - "[a] [plot] [a] [a] [a] [a] [a] [quests] [a]"
+    - "[a] [a] [a] [a] [char] [a] [a] [a] [a]" 
+    - "[a] [freunde] [a] [a] [charstats] [a] [a] [gilde] [a]" 
+    - "[a] [a] [a] [a] [a] [a] [a] [a] [optionen]"
+    
+
+    
+    
+Char_menu_handler:
+    type: world
+    debug: false
+    events:
+        on player clicks plot_item in Char_menu:
+        - inventory open d:in@Plot_Inv
+        - determine cancelled
+        on player clicks char_item in Char_menu:
+        - determine cancelled
+        on player clicks quests_item in Char_menu:
+        - inventory open d:in@Quest_inv_script
+        - determine cancelled
+        on player clicks charstats_item in Char_menu:
+        - inventory open d:in@Stat_Inventory
+        - determine cancelled
+        on player clicks freunde_item in Char_menu:
+        - inventory open d:in@friends_menu
+        - determine cancelled
+        on player clicks gilde_item in Char_menu:
+        - determine cancelled
+        on player left clicks optionen_item in Char_menu:
+        - inventory open d:in@player_options
+        - determine cancelled
+        on player clicks filler_item in Char_menu:
+        - determine cancelled
+        on player right clicks in Char_menu:
+        - inventory close
+        - determine cancelled
+        
+        
+
+
+        
+
+        
+        
+    
+optionen_item:
+    type: item
+    debug: false
+    material: note_block
+    display name: <&7><&l>Einstellungen
+    
+    
+    
+    
+plot_item:
+    type: item
+    debug: false
+    material: player_head[display_name=<&9><&l>Meine Heimat;skull_skin=bd287f02-7b3b-ffd9-c56c-99cb0fafab3b|eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOThkYWExZTNlZDk0ZmYzZTMzZTFkNGM2ZTQzZjAyNGM0N2Q3OGE1N2JhNGQzOGU3NWU3YzkyNjQxMDYifX19]
+    lore:
+    - "<&7>Land in Sicht!"
+    - "<&7>Dein Platz in Arazea."
+    
+char_item:
+    type: item
+    debug: false
+    material: "player_head[display_name=<&6><&l>Charakter;skull_skin=<player.uuid>]"
+    lore:
+    - ""
+    - "<&f>Name: <player.name>"
+    - "<&f>Level: <player.flag[char_level].as_int||0>"
+    - "<&f>Gilde: <player.flag[guild]||Nicht vorhanden>"
+    - "<&f>EXP: <player.flag[exp].as_int||0>/<proc[Level_proc].as_int||0>"
+    - ""
+    - "HP: <player.health.as_int||0>/<player.health.max.as_int||0>"
+    - ""
+    - "<&f>STR: <player.flag[str].as_int||0> (+<proc[proc_char_item_str].as_int||0>)"
+    - "<&f>AUS: <player.flag[aus].as_int||0> (+<proc[proc_char_item_aus].as_int||0>)"
+    - "<&f>GES: <player.flag[ges].as_int||0> (+<proc[proc_char_item_ges].as_int||0>)"
+    - ""
+    - "<&f>Schaden: <proc[proc_char_item_dmg].as_int||0> ~ <proc[proc_char_item_dmg_max].as_int||0>"
+    
+quests_item:
+    type: item
+    debug: false
+    material: player_head[display_name=<&2><&l>Quests;skull_skin=8d7d24be-a6b6-44ef-a689-f7b39b00e283|eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzJmZjJlNGZkNDE0Y2FiYTU5YzI0NmI5NzY2YjA0MDdjOWRlZWQ1Nzk3ZjQ2NGE1OTE0N2I4OGRmOTZmYzYifX19]
+    lore:
+    - "<&7>Hier hast du alle deine"
+    - "<&7>Quests auf einen Blick!"
+
+charstats_item:
+    type: item
+    debug: false
+    material: player_head[display_name=<&2><&l>Quests;skull_skin=a8a8e02f-30f7-4b54-ad11-f1fa8f7830ea|eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWE4ZWY5MmVmYTE1NjY5ZGY0ODMzMmQxMThhMmY3MDU3NzJhMmEzZmNkMGZiODJhNjFmMjc3Yjg0OWEyYmQ2In19fQ==]
+    display name: <&3><&l>Charakter-Stats
+    lore:
+    - "<&7>Vergebe Statuspunkte um"
+    - "<&7>deine Stats zu verbessern."
+
+    
+    
+freunde_item:
+    type: item
+    debug: false
+    material: player_head[display_name=<&5><&l>Freunde;skull_skin=b46b2241-5546-48db-a457-a2dbad23db27|eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2U0MzM2NTZiNDQzNjY4ZWQwM2RhYzhjNDQyNzIyYTJhNDEyMjFiZThiYjQ4ZTIzYjM1YmQ4YzJlNTlmNjMifX19]
+    lore:
+    - "<&7>Verwalte deine Freundesliste."
+    
+gilde_item:
+    type: item
+    debug: false
+    material: player_head[display_name=<&d><&l>Gilde;skull_skin=4b0845df-5f9a-47ab-8ab7-044f810017fd|eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTk1ODYzYjczNjM3NjA1ZmVhY2JiMTczYjc3ZDVlMTU1ZTY1MjA0Yzc4ZDVjNzkxMWY3MzhmMjhkZWI2MCJ9fX0]
+    lore:
+    - "<&7>Gemeinsam seid ihr stark!"
+        
+filler_item:
+    type: item
+    debug: false
+    material: black_stained_glass_pane
+    display name: <&8>...
+    
+    
+proc_char_item_str:
+    type: procedure
+    debug: false
+    script:
+        - ^define str 0
+        - ^define str <def[str].add[<player.inventory.slot[1].lore.get[<player.inventory.slot[1].lore.find_partial[STR]>].after[+].before[)]||0>]>
+        - ^define str <def[str].add[<player.inventory.slot[37].lore.get[<player.inventory.slot[37].lore.find_partial[STR]>].after[+].before[)]||0>]>
+        - ^define str <def[str].add[<player.inventory.slot[38].lore.get[<player.inventory.slot[38].lore.find_partial[STR]>].after[+].before[)]||0>]>
+        - ^define str <def[str].add[<player.inventory.slot[39].lore.get[<player.inventory.slot[39].lore.find_partial[STR]>].after[+].before[)]||0>]>
+        - ^define str <def[str].add[<player.inventory.slot[40].lore.get[<player.inventory.slot[40].lore.find_partial[STR]>].after[+].before[)]||0>]>
+        - determine %str%
+        
+proc_char_item_aus:
+    type: procedure
+    debug: false
+    script:
+        - ^define aus 0
+        - ^define aus <def[aus].add[<player.inventory.slot[1].lore.get[<player.inventory.slot[1].lore.find_partial[AUS]>].after[+].before[)]||0>]>
+        - ^define aus <def[aus].add[<player.inventory.slot[37].lore.get[<player.inventory.slot[37].lore.find_partial[AUS]>].after[+].before[)]||0>]>
+        - ^define aus <def[aus].add[<player.inventory.slot[38].lore.get[<player.inventory.slot[38].lore.find_partial[AUS]>].after[+].before[)]||0>]>
+        - ^define aus <def[aus].add[<player.inventory.slot[39].lore.get[<player.inventory.slot[39].lore.find_partial[AUS]>].after[+].before[)]||0>]>
+        - ^define aus <def[aus].add[<player.inventory.slot[40].lore.get[<player.inventory.slot[40].lore.find_partial[AUS]>].after[+].before[)]||0>]>
+        - determine %aus%
+        
+proc_char_item_ges:
+    type: procedure
+    debug: false
+    script:
+        - ^define ges 0
+        - ^define ges <def[ges].add[<player.inventory.slot[1].lore.get[<player.inventory.slot[1].lore.find_partial[GES]>].after[+].before[)]||0>]>
+        - ^define ges <def[ges].add[<player.inventory.slot[37].lore.get[<player.inventory.slot[37].lore.find_partial[GES]>].after[+].before[)]||0>]>
+        - ^define ges <def[ges].add[<player.inventory.slot[38].lore.get[<player.inventory.slot[38].lore.find_partial[GES]>].after[+].before[)]||0>]>
+        - ^define ges <def[ges].add[<player.inventory.slot[39].lore.get[<player.inventory.slot[39].lore.find_partial[GES]>].after[+].before[)]||0>]>
+        - ^define ges <def[ges].add[<player.inventory.slot[40].lore.get[<player.inventory.slot[40].lore.find_partial[GES]>].after[+].before[)]||0>]>
+        - determine %ges%
+    
+proc_char_item_dmg:
+    type: procedure
+    debug: false
+    script:
+        - define damage 1
+        - define damage <def[damage].add[<player.flag[str].mul[0.8]>]||0>
+        - if <player.inventory.slot[37].lore.find_partial[STR]||0> != -1 {
+            - define damage <def[damage].add[<player.inventory.slot[37].lore.get[<player.inventory.slot[37].lore.find_partial[STR]||0>].after[+].before[)].mul[0.8]||0>]>
+        }
+        else
+        {}
+        - if <player.inventory.slot[38].lore.find_partial[STR]||0> != -1 {
+            - define damage <def[damage].add[<player.inventory.slot[38].lore.get[<player.inventory.slot[38].lore.find_partial[STR]||0>].after[+].before[)].mul[0.8]||0>]>
+        }
+        else
+        {}
+        - if <player.inventory.slot[39].lore.find_partial[STR]||0> != -1 {
+            - define damage <def[damage].add[<player.inventory.slot[39].lore.get[<player.inventory.slot[39].lore.find_partial[STR]||0>].after[+].before[)].mul[0.8]||0>]>
+        }
+        else
+        {}
+        - if <player.inventory.slot[40].lore.find_partial[STR]||0> != -1 {
+            - define damage <def[damage].add[<player.inventory.slot[40].lore.get[<player.inventory.slot[40].lore.find_partial[STR]||0>].after[+].before[)].mul[0.8]||0>]>
+        }
+        else
+        {}
+        - determine %damage%
+
+
+
+
+proc_char_item_dmg_max:
+    type: procedure
+    debug: false
+    script:
+        - define damage 1
+        - define damage <def[damage].add[<player.flag[str].mul[0.8]>]||0>
+        - if <player.inventory.slot[37].lore.find_partial[STR]||0> != -1 {
+            - define damage <def[damage].add[<player.inventory.slot[37].lore.get[<player.inventory.slot[37].lore.find_partial[STR]||0>].after[+].before[)].mul[0.8]||0>]>
+        }
+        - if <player.inventory.slot[38].lore.find_partial[STR]||0> != -1 {
+            - define damage <def[damage].add[<player.inventory.slot[38].lore.get[<player.inventory.slot[38].lore.find_partial[STR]||0>].after[+].before[)].mul[0.8]||0>]>
+        }
+        - if <player.inventory.slot[39].lore.find_partial[STR]||0> != -1 {
+            - define damage <def[damage].add[<player.inventory.slot[39].lore.get[<player.inventory.slot[39].lore.find_partial[STR]||0>].after[+].before[)].mul[0.8]||0>]>
+        }
+        - if <player.inventory.slot[40].lore.find_partial[STR]||0> != -1 {
+            - define damage <def[damage].add[<player.inventory.slot[40].lore.get[<player.inventory.slot[40].lore.find_partial[STR]||0>].after[+].before[)].mul[0.8]||0>]>
+        }
+        - determine %damage%
+        
+        
+        
+        
+Start_Letter:
+    type: book
+    debug: false
+    title: Brief
+    
+    author: Das Xonecraft Team
+    
+    signed: true
+    
+    text:
+    - "Hey,<p>Du hast dich also entschieden dich hier in Arazea niederzulassen.<p>Du musst wissen, wir stecken viel Arbeit in diese Welt und wollen, dass die Bewohner dieser Welt zufrieden sind."
+    - "Da Du nun auch ein Bewohner Arazea's bist, möchten wir dir hiermit Dein zukünftiges Zuhause überreichen.<p>Eine Insel am Rande dieser Welt. Diese Insel ist zwar eine von vielen, jedoch ist sie einzigartig und eine Herausforderung."
+    - "Auf dieser Insel kannst Du tun was Du willst! Alles gehört Dir!<p>Um zu Deiner Insel zu gelangen, mach einen Rechtsklick mit Deinem Journal und wähle 'Meine Heimat' aus.<p>Dort klickst Du dann auf 'Insel 1' und schon bist Du da!"
+    - "Das XoneCraft Team wünscht Dir viel Spaß in Arazea!<p>Deine Geschichte hat nun begonnen."
+    - "Wo man her kommt kann man nicht bestimmen, wo man hingeht jedoch schon.<p>Xone, 2017"
+    - "Diese Seite ist leer."
+
+        
+        
+        
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        

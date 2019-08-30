@@ -1,0 +1,33 @@
+Disabled_Messages:
+    type: world
+    debug: false
+    events:
+        on player receives message:
+        - if "<context.message.contains[plots.admin.interact.road]>" {
+            - actionbar "<&6><&l>[<&4><&l><&n>Du kannst das nicht abbauen!<&6><&l>]"
+            - determine cancelled
+        }
+        - if "<context.message.contains[You have been teleported]>" {
+            - determine cancelled
+        }
+        - if "<context.message.contains[Have an admin set the flag]>" {
+            - determine cancelled
+        }
+        - if "<context.message.contains[plots.admin]>" {
+            - determine cancelled
+        }
+        - if "<context.message.contains[You successfully claimed the plot]>" {
+            - determine cancelled
+        }
+        - if "<context.message.contains[You are lacking the permission node]>" {
+            - determine cancelled
+        }
+        - if "<context.message.contains[playertonpc3]>" {
+            - determine cancelled
+        }
+        - if "<context.message.contains[Executing dCommand...]>" {
+            - determine cancelled
+        }
+        
+        
+        

@@ -1,0 +1,117 @@
+Thorin_Ankauf:
+    type: inventory
+    debug: false
+    title: "<&9>Handel mit Thorin"
+    size: 36
+    slots:
+    - "[] [] [] [] [] [] [] [] []"
+    - "[] [] [] [] [] [] [] [] []"
+    - "[] [] [] [] [] [] [] [] []"
+    - "[] [] [] [] [] [] [] [i@Handel_abbrechen] [i@Abschliessen]"
+
+    
+    
+Abschliessen:
+    type: item
+    debug: false
+    display name: "<&a>Handel abschließen"
+    material: i@anvil
+    
+Handel_abbrechen:
+    type: item
+    debug: false
+    display name: "<&c>Handel abbrechen"
+    material: i@barrier
+    
+Handel_Goldwert:
+    type: item
+    debug: false
+    display name: "<&e>Goldwert: <&6><player.flag[vkpreis]||0>"
+    material: i@gold_nugget
+ 
+# 
+    
+Thorin_Ankauf_handler: 
+    type: world
+    debug: false
+    events:
+        on player clicks in Thorin_Ankauf:
+        - wait 1t
+        - foreach "<player.open_inventory.list_contents.exclude[i@air].exclude[<in@Thorin_Ankauf.list_contents.last>].exclude[<in@Thorin_Ankauf.list_contents.get[<in@Thorin_Ankauf.list_contents.size.sub_int[1]>]>]>" {
+            - define preis <def[value].quantity.mul[<yaml[Items].read[<def[value].simple.replace_text[i@].with[]||0>]||0>]||0>
+            - flag player vkpreis:+:%preis%
+        }
+        - adjust <player> "action_bar:<&e><&l>Verkaufswert: <&6><&l><player.flag[vkpreis].as_money||0,00>"
+        - flag player vkpreis:!
+        
+
+        
+
+        
+        
+        
+        on player clicks Handel_abbrechen in Thorin_Ankauf:
+        - inventory close
+        - flag player npctrade:!
+        - determine cancelled
+        
+        
+        
+        on player closes inventory:
+        - define contents <player.open_inventory.list_contents.exclude[<in@Thorin_Ankauf.list_contents.last>].exclude[<in@Thorin_Ankauf.list_contents.get[<in@Thorin_Ankauf.list_contents.size.sub_int[1]>]>].exclude[i@air]>
+        - wait 1t
+        - flag player vkpreis:!
+        - if <context.inventory> == in@Thorin_Ankauf && <player.has_flag[ankauf_contents].not> {
+            - give <def[contents]>
+        }
+        - flag player npctrade:!
+        
+        
+        
+        on player clicks Abschliessen in Thorin_Ankauf:
+        - flag player ankauf_contents
+        - foreach "<player.open_inventory.list_contents.exclude[i@air].exclude[<in@Thorin_Ankauf.list_contents.last>].exclude[<in@Thorin_Ankauf.list_contents.get[<in@Thorin_Ankauf.list_contents.size.sub_int[1]>]>]>" {
+            - define preis <def[value].quantity.mul[<yaml[Items].read[<def[value].simple.replace_text[i@].with[]||0>]||0>]||0>
+            - flag player vkpreis:+:%preis%
+        }
+        - flag player money:<player.flag[money].add[<player.flag[vkpreis]||0>]>
+        - flag player vkpreis:!
+        - playsound <player> sound:accept_trade custom
+        - inventory close
+        - wait 1t
+        - flag player ankauf_contents:!
+        - determine cancelled
+        
+        
+        
+        on player clicks Handel_slot_spacer in Thorin_Ankauf_accept:
+        - determine cancelled
+        
+        on player clicks Handel_ja in Thorin_Ankauf_accept:
+        - flag player money:<player.flag[money].add[<player.flag[vkpreis]>]>
+        - flag player vkpreis:!
+        - flag player ankauf_contents:!
+        - playsound <player> sound:accept_trade custom
+        - inventory close
+        - run NPC_Text_Message "def:<&c><&l>Thorin|Mit dir verhandle ich immer wieder gern. Komm bald wieder vorbei!|<player.flag[Int_Thorin].as_list.replace_text[li@].with[]||>"
+        - flag player npctrade:!
+        - determine cancelled
+        
+        on player clicks Handel_nein in Thorin_Ankauf_accept:
+        - give <player.flag[ankauf_contents].as_list>
+        - wait 1t
+        - flag player ankauf_contents:!
+        - flag player npctrade:!
+        
+        - flag player vkpreis:!
+        - inventory close
+        - run NPC_Text_Message "def:<&c><&l>Thorin|Oh, du möchtest nicht verhandeln? Dann sehen wir uns bestimmt später wieder.|<player.flag[Int_Thorin].as_list.replace_text[li@].with[]||>"
+    
+    
+    
+        on player picks up item:
+        - if <player.has_flag[npctrade]> {
+            - determine cancelled
+        }
+    
+    

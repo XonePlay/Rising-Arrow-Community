@@ -1,0 +1,36 @@
+Portrolle_Minas_Durin:
+    type: item
+    debug: false
+    material: i@cat_spawn_egg
+    display name: <&a>Portrolle nach Minas Durin
+    lore: 
+    - ""
+    - "<&7>Teleportation nach Minas Durin."
+    - ""
+    - "<&7>Verkaufspreis: <&6><yaml[Items].read[Portrolle_Minas_Durin]> Gold"
+    
+Portrolle_Minas_Durin_handler:
+    type: world
+    debug: false
+    events:
+        on player right clicks with Portrolle_Minas_Durin:
+        - ^run Portrolle_Minas_Durin_teleport def:<player>
+        - ^determine cancelled
+        
+Portrolle_Minas_Durin_teleport:
+    type: task
+    debug: false
+    script:
+        - ^determine passively fulfilled
+        - ^title title: "subtitle:<&5>[<&a>INFO<&5>] Teleport wird vorbereitet." fade_in:0 stay:4 fade_out:1
+        - ^playsound %1% sound:block_portal_travel volume:0.3
+        - ^adjust %1% potion_effects:blindness,3,140
+        - ^wait 5
+        - if <%1%.is_online> {
+            - ^teleport <player> l@-961.5,64.5,104.5,3,130,world
+            - ^take %1% i@Portrolle_Minas_Durin qty:1 
+        }
+   
+        
+        
+        

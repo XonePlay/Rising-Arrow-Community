@@ -1,0 +1,12 @@
+Team_Prefix_chat:
+    type: world
+    debug: false
+    events:
+        on player chats:
+        - determine "FORMAT:Default"
+        
+ 
+Default:
+  type: format
+  debug: false
+  format: "<&3><&lb><player.flag[rank]||><&rb> <&5>✦ <&a><player.name> <&7>›› <&7><text>"

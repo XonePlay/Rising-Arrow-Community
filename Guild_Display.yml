@@ -1,0 +1,6 @@
+Guild_Display:
+    type: task
+    script:
+    - spawn ARMOR_STAND[custom_name=<player.flag[];custom_name_visibility=true;gravity=false;small=1] <player.location> save:newhologram 
+    - invisible <entry[newhologram].spawned_entities.get[1]> state:true
+    - mount <player>|<entry[newhologram].spawned_entities.get[1]>

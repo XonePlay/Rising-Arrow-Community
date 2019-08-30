@@ -1,0 +1,282 @@
+Level_proc:
+    type: procedure
+    debug: false
+    script:
+        - define value <player.flag[char_level].add_int[1]>
+        
+        - define 1 <def[value].sub[1]>
+        - define 1 <def[1].mul[%1%].mul[%1%]>
+        - define 1 <def[1].mul[50]>
+        
+        
+        - define 2 <def[value].sub[1]>
+        - define 2 <def[2].mul[%2%]>
+        - define 2 <def[2].mul[150]>
+        
+        - define 3 <def[value].sub[1]>
+        - define 3 <def[3].mul[400]>
+        
+        - define summe <def[1].sub[<def[2]>].add[<def[3]>]>
+        - define end <def[summe].div[3]>
+        - determine %end%
+        
+        
+
+        
+        
+        
+Level_system_handler:
+    type: world
+    debug: false
+    events:
+        on player flag exp changed:
+        - if <player.flag[exp]> <= <proc[Level_proc]> queue clear
+        - if <player.has_flag[level_up]> queue clear
+        - flag player level_up
+        - wait 1t
+        - define exp_new_lvl <player.flag[exp].sub[<proc[Level_proc]>]>
+        - flag player exp:%exp_new_lvl%
+        - flag player char_level:+:1
+        - flag player statuspunkte:+:1
+        - yaml set id:p_stats <player>.exp:<player.flag[exp]>
+        - flag player levelup_cooldown duration:5s
+        - title "title:<&6>LEVEL AUFGESTIEGEN" "subtitle:<&e>Lv:<&l><player.flag[char_level].as_int||0> <&3>Neue <&l>Statuspunkte <&3>verfügbar!"
+        - flag player level_up:!
+        - adjust <player> "fake_experience:<player.flag[exp].as_int.div[<proc[Level_proc].as_int>]>|<player.flag[char_level].as_int>"
+        on player dies:
+        - if <player.flag[exp]> !<= 0 {
+            - define exp <proc[Level_proc].as_int||0>
+            - define exp <def[exp].div[100].mul[1]>
+            - if <player.flag[exp].sub[%exp%]> >= 0 {
+                - flag player exp:-:%exp%
+                - yaml set id:p_stats <player>.exp:-:%exp%
+                - narrate "<&3>%exp% EXP verloren."
+            }
+            else
+            {
+                - define exp_lost <player.flag[exp]>
+                - narrate "<&3>%exp_lost% EXP verloren."
+                - flag player exp:0
+                - yaml set id:p_stats <player>.exp:0
+            }  
+        }
+        else
+        {
+            - narrate "<&3>0 EXP verloren."
+        }
+        - adjust <player> "fake_experience:<player.flag[exp].as_int.div[<proc[Level_proc].as_int>]>|<player.flag[char_level].as_int>"
+        
+        on player flag char_level changed:
+        - yaml set id:p_stats <player>.char_level:<player.flag[char_level]>
+        
+        
+        on player joins:
+        - if <yaml[p_stats].read[<player>.char_level]||none> == none {
+            - flag player char_level:1
+            - yaml set id:p_stats <player>.char_level:1
+        }
+        else if <yaml[p_stats].read[<player>.char_level]||> >= 0 {
+            - flag player char_level:<yaml[p_stats].read[<player>.char_level]||>
+        }
+        
+        - if <yaml[p_stats].read[<player>.exp]||none> == none {
+            - flag player exp:0
+            - yaml set id:p_stats <player>.exp:0
+        }
+        else if <yaml[p_stats].read[<player>.exp]||> >= 0 {
+            - flag player exp:<yaml[p_stats].read[<player>.exp]||>
+        }
+        - wait 1t
+        - adjust <player> "fake_experience:<player.flag[exp].as_int.div[<proc[Level_proc].as_int>]>|<player.flag[char_level].as_int>"
+        
+        
+        on player quit:
+        - yaml set id:p_stats <player>.exp:<player.flag[exp]>
+        - yaml set id:p_stats <player>.char_level:<player.flag[char_level]>
+        - yaml set id:p_stats <player>.str:<player.flag[str]>
+        - yaml set id:p_stats <player>.ges:<player.flag[ges]>
+        - yaml set id:p_stats <player>.aus:<player.flag[aus]>
+        
+
+        
+        
+        
+mob_exp_handler:
+    type: world
+    debug: false
+    events:
+        on player kills zombie:
+        - define dmger <context.damager>
+        - define exp <yaml[mob_exp].read[zombie]>
+        - define gold <util.random.decimal[0.001].to[0.01]>
+        - if <player.has_flag[is_in_group].not> {
+            - flag player exp:+:%exp%
+            - flag player money:+:<util.random.decimal[0.001].to[0.01]>
+            - queue clear
+        }
+        - foreach <%dmger%.flag[gruppen_liste].as_list> {
+            - if <%value%.location.find.players.within[50].contains[%dmger%]> {
+                - define exp <def[exp].div[100].mul[110]>
+                - define gold <def[gold].div[100].mul[110]>
+                - flag <def[value]> exp:+:<def[exp].div[<player.flag[gruppen_liste].as_list.size>]>
+                - flag <def[value]> money:+:<def[gold].div[<player.flag[gruppen_liste].as_list.size>]>
+            }
+        }
+        
+        on player kills skeleton:
+        - define dmger <context.damager>
+        - define exp <yaml[mob_exp].read[skeleton]>
+        - define gold <util.random.decimal[0.005].to[0.02]>
+        - if <player.has_flag[is_in_group].not> {
+            - flag player exp:+:%exp%
+            - queue clear
+        }
+        - foreach <player.flag[gruppen_liste].as_list> {
+            - if <%value%.location.find.players.within[50].contains[%dmger%]> {
+                - define exp <def[exp].div[100].mul[110]>
+                - define gold <def[gold].div[100].mul[110]>
+                - flag <def[value]> exp:+:<def[exp].div[<player.flag[gruppen_liste].as_list.size>]>
+                - flag <def[value]> money:+:<def[gold].div[<player.flag[gruppen_liste].as_list.size>]>
+            }
+        }
+        
+        on player kills creeper:
+        - define dmger <context.damager>
+        - define exp <yaml[mob_exp].read[creeper]>
+        - define gold <util.random.decimal[0.008].to[0.03]>
+        - if <player.has_flag[is_in_group].not> {
+            - flag player exp:+:%exp%
+            - queue clear
+        }
+        - foreach <player.flag[gruppen_liste].as_list> {
+            - if <%value%.location.find.players.within[50].contains[%dmger%]> {
+                - define exp <def[exp].div[100].mul[110]>
+                - define gold <def[gold].div[100].mul[110]>
+                - flag <def[value]> exp:+:<def[exp].div[<player.flag[gruppen_liste].as_list.size>]>
+                - flag <def[value]> money:+:<def[gold].div[<player.flag[gruppen_liste].as_list.size>]>
+            }
+        }
+        
+        on player kills enderman:
+        - define dmger <context.damager>
+        - define exp <yaml[mob_exp].read[enderman]>
+        - define gold <util.random.decimal[0.02].to[0.05]>
+        - if <player.has_flag[is_in_group].not> {
+            - flag player exp:+:%exp%
+            - queue clear
+        }
+        - foreach <player.flag[gruppen_liste].as_list> {
+            - if <%value%.location.find.players.within[50].contains[%dmger%]> {
+                - define exp <def[exp].div[100].mul[110]>
+                - define gold <def[gold].div[100].mul[110]>
+                - flag <def[value]> exp:+:<def[exp].div[<player.flag[gruppen_liste].as_list.size>]>
+                - flag <def[value]> money:+:<def[gold].div[<player.flag[gruppen_liste].as_list.size>]>
+            }
+        }
+        
+        on player kills spider:
+        - define dmger <context.damager>
+        - define exp <yaml[mob_exp].read[spider]>
+        - define gold <util.random.decimal[0.005].to[0.02]>
+        - if <player.has_flag[is_in_group].not> {
+            - flag player exp:+:%exp%
+            - queue clear
+        }
+        - foreach <player.flag[gruppen_liste].as_list> {
+            - if <%value%.location.find.players.within[50].contains[%dmger%]> {
+                - define exp <def[exp].div[100].mul[110]>
+                - define gold <def[gold].div[100].mul[110]>
+                - flag <def[value]> exp:+:<def[exp].div[<player.flag[gruppen_liste].as_list.size>]>
+                - flag <def[value]> money:+:<def[gold].div[<player.flag[gruppen_liste].as_list.size>]>
+            }
+        }
+        
+        on player kills pig_zombie:
+        - define dmger <context.damager>
+        - define exp <yaml[mob_exp].read[pig_zombie]>
+        - define gold <util.random.decimal[0.005].to[0.04]>
+        - if <player.has_flag[is_in_group].not> {
+            - flag player exp:+:%exp%
+            - queue clear
+        }
+        - foreach <player.flag[gruppen_liste].as_list> {
+            - if <%value%.location.find.players.within[50].contains[%dmger%]> {
+                - define exp <def[exp].div[100].mul[110]>
+                - define gold <def[gold].div[100].mul[110]>
+                - flag <def[value]> exp:+:<def[exp].div[<player.flag[gruppen_liste].as_list.size>]>
+                - flag <def[value]> money:+:<def[gold].div[<player.flag[gruppen_liste].as_list.size>]>
+            }
+        }
+        
+        on player kills witch:
+        - define dmger <context.damager>
+        - define exp <yaml[mob_exp].read[witch]>
+        - define gold <util.random.decimal[0.005].to[0.05]>
+        - if <player.has_flag[is_in_group].not> {
+            - flag player exp:+:%exp%
+            - queue clear
+        }
+        - foreach <player.flag[gruppen_liste].as_list> {
+            - if <%value%.location.find.players.within[50].contains[%dmger%]> {
+                - define exp <def[exp].div[100].mul[110]>
+                - define gold <def[gold].div[100].mul[110]>
+                - flag <def[value]> exp:+:<def[exp].div[<player.flag[gruppen_liste].as_list.size>]>
+                - flag <def[value]> money:+:<def[gold].div[<player.flag[gruppen_liste].as_list.size>]>
+            }
+        }
+        
+        on player kills cave_spider:
+        - define dmger <context.damager>
+        - define exp <yaml[mob_exp].read[cave_spider]>
+        - define gold <util.random.decimal[0.005].to[0.04]>
+        - if <player.has_flag[is_in_group].not> {
+            - flag player exp:+:%exp%
+            - queue clear
+        }
+        - foreach <player.flag[gruppen_liste].as_list> {
+            - if <%value%.location.find.players.within[50].contains[%dmger%]> {
+                - define exp <def[exp].div[100].mul[110]>
+                - define gold <def[gold].div[100].mul[110]>
+                - flag <def[value]> exp:+:<def[exp].div[<player.flag[gruppen_liste].as_list.size>]>
+                - flag <def[value]> money:+:<def[gold].div[<player.flag[gruppen_liste].as_list.size>]>
+            }
+        }
+        
+        on player kills blaze:
+        - define dmger <context.damager>
+        - define exp <yaml[mob_exp].read[blaze]>
+        - define gold <util.random.decimal[0.005].to[0.1]>
+        - if <player.has_flag[is_in_group].not> {
+            - flag player exp:+:%exp%
+            - queue clear
+        }
+        - foreach <player.flag[gruppen_liste].as_list> {
+            - if <%value%.location.find.players.within[50].contains[%dmger%]> {
+                - define exp <def[exp].div[100].mul[110]>
+                - define gold <def[gold].div[100].mul[110]>
+                - flag <def[value]> exp:+:<def[exp].div[<player.flag[gruppen_liste].as_list.size>]>
+                - flag <def[value]> money:+:<def[gold].div[<player.flag[gruppen_liste].as_list.size>]>
+            }
+        }
+        
+        on player kills slime:
+        - define dmger <context.damager>
+        - define exp <yaml[mob_exp].read[slime]>
+        - define gold <util.random.decimal[0.005].to[0.01]>
+        - if <player.has_flag[is_in_group].not> {
+            - flag player exp:+:%exp%
+            - queue clear
+        }
+        - foreach <player.flag[gruppen_liste].as_list> {
+            - if <%value%.location.find.players.within[50].contains[%dmger%]> {
+                - define exp <def[exp].div[100].mul[110]>
+                - define gold <def[gold].div[100].mul[110]>
+                - flag <def[value]> exp:+:<def[exp].div[<player.flag[gruppen_liste].as_list.size>]>
+                - flag <def[value]> money:+:<def[gold].div[<player.flag[gruppen_liste].as_list.size>]>
+            }
+        }
+        
+
+
+        
+        

@@ -1,0 +1,77 @@
+Saplings_auto_plant:
+    type: world
+	debug: false
+    events:
+        on oak_sapling despawns:
+        - if <context.location.below.material> == m@grass || <context.location.below.material> == m@dirt || <context.location.below.material> == m@coarse_dirt || <context.location.below.material> == m@podzol {
+            - if <context.location.material> != m@air || <context.location.material> != m@snow queue clear
+            - if <util.random.int[1].to[2]> == 1 queue clear
+            - if <context.location.in_region[rieva]> queue clear
+            - modifyblock <context.location> oak_sapling
+        }
+        on spruce_sapling despawns:
+        - if <context.location.below.material> == m@grass || <context.location.below.material> == m@dirt || <context.location.below.material> == m@coarse_dirt || <context.location.below.material> == m@podzol {
+            - if <context.location.material> != m@air || <context.location.material> != m@snow queue clear
+            - if <util.random.int[1].to[2]> == 1 queue clear
+            - if <context.location.in_region[rieva]> queue clear
+            - modifyblock <context.location> spruce_sapling
+        }
+        on birch_sapling despawns:
+        - if <context.location.below.material> == m@grass || <context.location.below.material> == m@dirt || <context.location.below.material> == m@coarse_dirt || <context.location.below.material> == m@podzol {
+            - if <context.location.material> != m@air || <context.location.material> != m@snow queue clear
+            - if <util.random.int[1].to[2]> == 1 queue clear
+            - if <context.location.in_region[rieva]> queue clear
+            - modifyblock <context.location> birch_sapling
+        }
+        on jungle_sapling despawns:
+        - if <context.location.below.material> == m@grass || <context.location.below.material> == m@dirt || <context.location.below.material> == m@coarse_dirt || <context.location.below.material> == m@podzol {
+            - if <context.location.material> != m@air || <context.location.material> != m@snow queue clear
+            - if <util.random.int[1].to[2]> == 1 queue clear
+            - if <context.location.in_region[rieva]> queue clear
+            - modifyblock <context.location> jungle_sapling
+        }
+        on acacia_sapling despawns:
+        - if <context.location.below.material> == m@grass || <context.location.below.material> == m@dirt || <context.location.below.material> == m@coarse_dirt || <context.location.below.material> == m@podzol {
+            - if <context.location.material> != m@air || <context.location.material> != m@snow queue clear
+            - if <util.random.int[1].to[2]> == 1 queue clear
+            - if <context.location.in_region[rieva]> queue clear
+            - modifyblock <context.location> acacia_sapling
+        }
+        on darkoak_sapling despawns:
+        - if <context.location.below.material> == m@grass || <context.location.below.material> == m@dirt || <context.location.below.material> == m@coarse_dirt || <context.location.below.material> == m@podzol {
+            - if <context.location.material> != m@air || <context.location.material> != m@snow queue clear
+            - if <util.random.int[1].to[2]> == 1 queue clear
+            - if <context.location.in_region[rieva]> queue clear
+            - modifyblock <context.location> darkoak_sapling
+        }
+        
+        
+        
+        
+        
+        
+        on player joins:
+        - if <player.name> != Xonex3 queue clear
+        - while <player.is_online> {
+            - if <player.location.in_region.not> {
+                - foreach <player.location.find.blocks[leaves].within[20]||> {
+                    - if <player.is_online.not> while stop
+                    - if <util.random.int[1].to[500]> == 5 {
+                        - drop i@oak_sapling <def[value]> qty:1
+                    }
+                }
+            - wait 5m
+            }
+        }
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+
+        

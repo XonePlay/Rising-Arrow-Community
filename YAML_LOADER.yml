@@ -1,0 +1,17 @@
+yaml_load:
+    type: world
+    debug: false
+    events:
+        on server start:
+        - yaml load:Items.yml id:Items
+        - yaml load:data_saves/p_friends.yml id:p_friends
+        - yaml load:data_saves/p_stats.yml id:p_stats
+        on yaml_load command:
+        - determine fulfilled passively
+        - yaml load:Items.yml id:Items
+        - yaml load:data_saves/p_friends.yml id:p_friends
+        - yaml load:data_saves/p_stats.yml id:p_stats
+        - narrate "<&c>YAML's geladen!"
+        on server stop:
+        - yaml savefile:data_saves/p_friends.yml id:p_friends
+        - yaml savefile:data_saves/p_stats.yml id:p_stats

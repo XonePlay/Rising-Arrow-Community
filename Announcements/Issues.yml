@@ -1,0 +1,17 @@
+Issues_Announcement:
+    type: world
+    debug: false
+    events:
+        on server start:
+            - flag server bug_announce_count:0
+        on system time minutely:
+            - if <server.flag[bug_announce_count]> < 10 {
+                - flag server bug_announce_count:++
+                - queue clear
+            }
+            else
+            {
+                - flag server bug_announce_count:0
+                - announce "<&6>⎢⎢ <&9>INFO<&6> ⎢⎢ <&f>Wenn du Hilfe benötigst, Bugs hast oder Vorschläge dann schreibe uns bitte hier: <&e><proc[msgUrl].context[<&e>bit.ly/RAC-Issues|bit.ly/RAC-Issues|<&9>Offizielle GitHub Seite]>"
+            }
+          
